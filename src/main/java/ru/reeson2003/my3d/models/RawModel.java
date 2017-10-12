@@ -1,4 +1,4 @@
-package ru.reeson2003.my3d.renderEngine;
+package ru.reeson2003.my3d.models;
 
 /**
  * Created by Pavel Gavrilov on 12.10.2017.
