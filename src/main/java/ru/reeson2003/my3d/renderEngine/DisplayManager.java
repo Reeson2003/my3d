@@ -18,9 +18,19 @@ public class DisplayManager {
         GL11.glViewport(0, 0, width, height);
     }
 
+    public static void createDisplay(int width, int height, String title) throws LWJGLException {
+        createDisplay(width, height);
+        Display.setTitle(title);
+    }
+
     public static void createDisplay(int width, int height, int fps) throws LWJGLException {
         fpsCap = fps;
         createDisplay(width, height);
+    }
+
+    public static void createDisplay(int width, int height, int fps, String title) throws LWJGLException {
+        fpsCap = fps;
+        createDisplay(width, height, title);
     }
 
     public static void updateDisplay() {
