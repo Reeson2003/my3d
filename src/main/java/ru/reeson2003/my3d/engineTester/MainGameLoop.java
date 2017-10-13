@@ -13,6 +13,8 @@ import ru.reeson2003.my3d.renderEngine.Renderer;
 import ru.reeson2003.my3d.shaders.StaticShader;
 import ru.reeson2003.my3d.textures.ModelTexture;
 
+import java.util.Random;
+
 /**
  * Created by Pavel Gavrilov on 12.10.2017.
  */
@@ -34,11 +36,11 @@ public class MainGameLoop {
             3, 1, 2 /*TOP RIGHT TRIANGLE (V3, V1, V2)*/
     };
 
-    private static final float[] TEXTURE_COORDINATES =  {
-            0,0, /*V0*/
-            0,1, /*V1*/
-            1,1, /*V2*/
-            1,0 /*V3*/
+    private static final float[] TEXTURE_COORDINATES = {
+            0, 0, /*V0*/
+            0, 1, /*V1*/
+            1, 1, /*V2*/
+            1, 0 /*V3*/
     };
 
     public static void main(String[] args) {
@@ -53,20 +55,52 @@ public class MainGameLoop {
             RawModel model = loader.loadToVAO(VERTICES, TEXTURE_COORDINATES, INDICES);
             ModelTexture texture = new ModelTexture(loader.loadTexture("textures/mario.png"));
             TexturedModel texturedModel = new TexturedModel(model, texture);
-            Entity entity = new Entity(texturedModel, new Vector3f(0, 0, 0),0,50,50,0.3f);
+//            Entity entity = generateEntity(texturedModel);
+            Entity[] entities = new Entity[50];
+            for (int i = 0; i < entities.length; i++) {
+                entities[i] = generateEntity(texturedModel);
+            }
             while (!Display.isCloseRequested()) {
                 renderer.prepare();
                 shader.start();
-                renderer.render(entity, shader);
+//                renderer.render(entity, shader);
+                for (Entity entity : entities) {
+                    renderer.render(entity, shader);
+                }
                 shader.stop();
                 DisplayManager.updateDisplay();
             }
         } catch (LWJGLException e) {
             e.printStackTrace();
         } finally {
-            shader.cleanUp();
-            loader.cleanUp();
+            if (shader != null)
+                shader.cleanUp();
+            if (loader != null)
+                loader.cleanUp();
             DisplayManager.closeDisplay();
         }
+    }
+
+    private static Entity generateEntity(TexturedModel model) {
+        final float tMax = 1f;
+        final float tMin = -1f;
+        float tx = getRandomFloat(tMin, tMax);
+        float ty = getRandomFloat(tMin, tMax);
+        float tz = getRandomFloat(tMin, tMax);
+        Vector3f v = new Vector3f(tx, ty, tz);
+        final float rMax = 100f;
+        final float rMin = -100f;
+        float rx = getRandomFloat(rMin, rMax);
+        float ry = getRandomFloat(rMin, rMax);
+        float rz = getRandomFloat(rMin, rMax);
+        float sMax = 0.2f;
+        float sMin = 0.05F;
+        float s = getRandomFloat(sMin, sMax);
+        return new Entity(model, v, rx, ry, rz, s);
+    }
+
+    private static float getRandomFloat(float min, float max) {
+        Random random = new Random(System.nanoTime());
+        return min + random.nextFloat() * (max - min);
     }
 }
