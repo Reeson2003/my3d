@@ -2,7 +2,9 @@ package ru.reeson2003.my3d.engineTester;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.TextureLoader;
+import ru.reeson2003.my3d.entities.Entity;
 import ru.reeson2003.my3d.models.TexturedModel;
 import ru.reeson2003.my3d.renderEngine.DisplayManager;
 import ru.reeson2003.my3d.renderEngine.Loader;
@@ -51,10 +53,11 @@ public class MainGameLoop {
             RawModel model = loader.loadToVAO(VERTICES, TEXTURE_COORDINATES, INDICES);
             ModelTexture texture = new ModelTexture(loader.loadTexture("textures/mario.png"));
             TexturedModel texturedModel = new TexturedModel(model, texture);
+            Entity entity = new Entity(texturedModel, new Vector3f(0, 0, 0),0,50,50,0.3f);
             while (!Display.isCloseRequested()) {
                 renderer.prepare();
                 shader.start();
-                renderer.render(texturedModel);
+                renderer.render(entity, shader);
                 shader.stop();
                 DisplayManager.updateDisplay();
             }
