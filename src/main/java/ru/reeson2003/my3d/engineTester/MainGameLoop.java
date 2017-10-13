@@ -4,6 +4,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.TextureLoader;
+import ru.reeson2003.my3d.entities.Camera;
 import ru.reeson2003.my3d.entities.Entity;
 import ru.reeson2003.my3d.models.TexturedModel;
 import ru.reeson2003.my3d.renderEngine.DisplayManager;
@@ -56,7 +57,8 @@ public class MainGameLoop {
             ModelTexture texture = new ModelTexture(loader.loadTexture("textures/mario.png"));
             TexturedModel texturedModel = new TexturedModel(model, texture);
             Random random = new Random(System.nanoTime());
-            Entity entity = new Entity(texturedModel, new Vector3f(0,-1,-10f), -80, 0, 0, 10);
+            Entity entity = new Entity(texturedModel, new Vector3f(0,0,-3), 0, 0, 0, 1);
+            Camera camera = new Camera();
 //            Entity[] entities = new Entity[5000];
 //            float[] speeds = new float[entities.length];
 //            for (int i = 0; i < entities.length; i++) {
@@ -64,8 +66,10 @@ public class MainGameLoop {
 //                speeds[i] = getRandomFloat(random, -0.05f, -0.001f);
 //            }
             while (!Display.isCloseRequested()) {
+                camera.move();
                 renderer.prepare();
                 shader.start();
+                shader.loadViewMatrix(camera);
                 renderer.render(entity, shader);
 //                for (int i = 0; i < entities.length; i++) {
 //                    renderer.render(entities[i], shader);

@@ -1,6 +1,7 @@
 package ru.reeson2003.my3d.entities;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -10,9 +11,9 @@ public class Camera {
     private static final float speed = 0.02f;
 
     private Vector3f position = new Vector3f(0, 0, 0);
-    private float pitch;
-    private float yaw;
-    private float roll;
+    private float pitch = 0;
+    private float yaw = 0;
+    private float roll = 0;
 
     public Camera() {
     }
