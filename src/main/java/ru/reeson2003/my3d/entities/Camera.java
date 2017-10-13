@@ -1,14 +1,13 @@
 package ru.reeson2003.my3d.entities;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Created by Pavel Gavrilov on 13.10.2017.
  */
 public class Camera {
-    private static final float speed = 0.02f;
+    private static final float speed = 0.1f;
 
     private Vector3f position = new Vector3f(0, 0, 0);
     private float pitch = 0;

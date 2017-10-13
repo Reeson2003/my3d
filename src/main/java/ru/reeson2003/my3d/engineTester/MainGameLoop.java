@@ -57,25 +57,25 @@ public class MainGameLoop {
             ModelTexture texture = new ModelTexture(loader.loadTexture("textures/mario.png"));
             TexturedModel texturedModel = new TexturedModel(model, texture);
             Random random = new Random(System.nanoTime());
-            Entity entity = new Entity(texturedModel, new Vector3f(0,0,-3), 0, 0, 0, 1);
+//            Entity entity = new Entity(texturedModel, new Vector3f(0,0,-3), 0, 0, 0, 1);
             Camera camera = new Camera();
-//            Entity[] entities = new Entity[5000];
-//            float[] speeds = new float[entities.length];
-//            for (int i = 0; i < entities.length; i++) {
-//                entities[i] = generateEntity(texturedModel, random);
-//                speeds[i] = getRandomFloat(random, -0.05f, -0.001f);
-//            }
+            Entity[] entities = new Entity[5000];
+            float[] speeds = new float[entities.length];
+            for (int i = 0; i < entities.length; i++) {
+                entities[i] = generateEntity(texturedModel, random);
+                speeds[i] = getRandomFloat(random, -0.05f, -0.001f);
+            }
             while (!Display.isCloseRequested()) {
                 camera.move();
                 renderer.prepare();
                 shader.start();
                 shader.loadViewMatrix(camera);
-                renderer.render(entity, shader);
-//                for (int i = 0; i < entities.length; i++) {
-//                    renderer.render(entities[i], shader);
+//                renderer.render(entity, shader);
+                for (int i = 0; i < entities.length; i++) {
+                    renderer.render(entities[i], shader);
 //                    entities[i].increaseRotation(1f, 1f, 1f);
 //                    entities[i].increasePosition(0, 0, speeds[i]);
-//                }
+                }
                 shader.stop();
                 DisplayManager.updateDisplay();
             }
