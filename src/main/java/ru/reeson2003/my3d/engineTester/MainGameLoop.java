@@ -21,7 +21,7 @@ import java.util.Random;
 public class MainGameLoop {
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
-    public static final int FPS = 60;
+    public static final int FPS = 120;
     public static final String TITLE = "AWESOME";
 
     private static final float[] VERTICES = {
@@ -66,6 +66,8 @@ public class MainGameLoop {
 //                renderer.render(entity, shader);
                 for (Entity entity : entities) {
                     renderer.render(entity, shader);
+                    entity.increaseRotation(-0.02f, 0.2f, 0.2f);
+                    entity.increasePosition(0.0002f, 0, 0);
                 }
                 shader.stop();
                 DisplayManager.updateDisplay();
