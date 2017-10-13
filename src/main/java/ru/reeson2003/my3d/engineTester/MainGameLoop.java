@@ -19,8 +19,8 @@ import java.util.Random;
  * Created by Pavel Gavrilov on 12.10.2017.
  */
 public class MainGameLoop {
-    public static final int WIDTH = 1280;
-    public static final int HEIGHT = 720;
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 400;
     public static final int FPS = 120;
     public static final String TITLE = "AWESOME";
 
@@ -55,23 +55,27 @@ public class MainGameLoop {
             RawModel model = loader.loadToVAO(VERTICES, TEXTURE_COORDINATES, INDICES);
             ModelTexture texture = new ModelTexture(loader.loadTexture("textures/mario.png"));
             TexturedModel texturedModel = new TexturedModel(model, texture);
-//            Entity entity = generateEntity(texturedModel);
-            Entity[] entities = new Entity[50];
-            for (int i = 0; i < entities.length; i++) {
-                entities[i] = generateEntity(texturedModel);
-            }
+            Random random = new Random(System.nanoTime());
+            Entity entity = new Entity(texturedModel, new Vector3f(0,-1,-10f), -80, 0, 0, 10);
+//            Entity[] entities = new Entity[5000];
+//            float[] speeds = new float[entities.length];
+//            for (int i = 0; i < entities.length; i++) {
+//                entities[i] = generateEntity(texturedModel, random);
+//                speeds[i] = getRandomFloat(random, -0.05f, -0.001f);
+//            }
             while (!Display.isCloseRequested()) {
                 renderer.prepare();
                 shader.start();
-//                renderer.render(entity, shader);
-                for (Entity entity : entities) {
-                    renderer.render(entity, shader);
-                    entity.increaseRotation(-0.02f, 0.2f, 0.2f);
-                    entity.increasePosition(0.0002f, 0, 0);
-                }
+                renderer.render(entity, shader);
+//                for (int i = 0; i < entities.length; i++) {
+//                    renderer.render(entities[i], shader);
+//                    entities[i].increaseRotation(1f, 1f, 1f);
+//                    entities[i].increasePosition(0, 0, speeds[i]);
+//                }
                 shader.stop();
                 DisplayManager.updateDisplay();
             }
+
         } catch (LWJGLException e) {
             e.printStackTrace();
         } finally {
@@ -83,26 +87,25 @@ public class MainGameLoop {
         }
     }
 
-    private static Entity generateEntity(TexturedModel model) {
-        final float tMax = 1f;
-        final float tMin = -1f;
-        float tx = getRandomFloat(tMin, tMax);
-        float ty = getRandomFloat(tMin, tMax);
-        float tz = getRandomFloat(tMin, tMax);
+    private static Entity generateEntity(TexturedModel model, Random random) {
+        final float tMax = 100f;
+        final float tMin = -100f;
+        float tx = getRandomFloat(random, tMin, tMax);
+        float ty = getRandomFloat(random, tMin, tMax);
+        float tz = getRandomFloat(random, tMin, tMax);
         Vector3f v = new Vector3f(tx, ty, tz);
         final float rMax = 100f;
         final float rMin = -100f;
-        float rx = getRandomFloat(rMin, rMax);
-        float ry = getRandomFloat(rMin, rMax);
-        float rz = getRandomFloat(rMin, rMax);
-        float sMax = 0.2f;
-        float sMin = 0.05F;
-        float s = getRandomFloat(sMin, sMax);
+        float rx = getRandomFloat(random, rMin, rMax);
+        float ry = getRandomFloat(random, rMin, rMax);
+        float rz = getRandomFloat(random, rMin, rMax);
+        float sMax = 5f;
+        float sMin = 5F;
+        float s = getRandomFloat(random, sMin, sMax);
         return new Entity(model, v, rx, ry, rz, s);
     }
 
-    private static float getRandomFloat(float min, float max) {
-        Random random = new Random(System.nanoTime());
+    private static float getRandomFloat(Random random, float min, float max) {
         return min + random.nextFloat() * (max - min);
     }
 }
