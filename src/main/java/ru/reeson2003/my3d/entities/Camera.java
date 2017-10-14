@@ -7,14 +7,15 @@ import org.lwjgl.util.vector.Vector3f;
  * Created by Pavel Gavrilov on 13.10.2017.
  */
 public class Camera {
-    private static final float speed = 0.1f;
+    private float speed = 0.1f;
 
     private Vector3f position = new Vector3f(0, 0, 0);
     private float pitch = 0;
     private float yaw = 0;
     private float roll = 0;
 
-    public Camera() {
+    public Camera(float speed) {
+        this.speed = speed;
     }
 
     public void move() {
@@ -46,5 +47,13 @@ public class Camera {
 
     public float getRoll() {
         return roll;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
     }
 }

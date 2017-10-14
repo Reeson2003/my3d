@@ -24,6 +24,7 @@ public class MainGameLoop {
     public static final int HEIGHT = 400;
     public static final int FPS = 120;
     public static final String TITLE = "AWESOME";
+    public static final float CAMERA_SPEED = 0.5f;
 
     private static final float[] VERTICES = {
             -0.5f, 0.5f, 0f, /*V0*/
@@ -58,8 +59,8 @@ public class MainGameLoop {
             TexturedModel texturedModel = new TexturedModel(model, texture);
             Random random = new Random(System.nanoTime());
 //            Entity entity = new Entity(texturedModel, new Vector3f(0,0,-3), 0, 0, 0, 1);
-            Camera camera = new Camera();
-            Entity[] entities = new Entity[5000];
+            Camera camera = new Camera(CAMERA_SPEED);
+            Entity[] entities = new Entity[500];
             float[] speeds = new float[entities.length];
             for (int i = 0; i < entities.length; i++) {
                 entities[i] = generateEntity(texturedModel, random);
