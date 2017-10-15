@@ -39,11 +39,13 @@ public class MainGameLoop {
             renderer = new Renderer();
             shader = new StaticShader();
             Shape shape = new Cube();
-            RawModel model = OBJLoader.loadModel("models/dragon/dragon.obj", loader);
-            ModelTexture texture = new ModelTexture(loader.loadTexture("models/dragon/dragon.png"));
+            RawModel model = OBJLoader.loadModel("models/stall/stall.obj", loader);
+            ModelTexture texture = new ModelTexture(loader.loadTexture("models/stall/stallTexture.png"));
+            texture.setReflectivity(10f);
+            texture.setShineDamper(50f);
             TexturedModel texturedModel = new TexturedModel(model, texture);
             Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -50), 0, 0, 0, 1);
-            Light cold = new Light(new Vector3f(0, 25, -75), new Vector3f(1, 1, 1));
+            Light cold = new Light(new Vector3f(25, 25, -25), new Vector3f(1, 1, 0.3f));
             Light warm = new Light(new Vector3f(-25, 0, -25), new Vector3f(0.8f, 0.8f, 0.3f));
             Camera camera = new Camera(CAMERA_SPEED);
             while (!Display.isCloseRequested()) {

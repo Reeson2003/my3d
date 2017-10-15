@@ -6,6 +6,7 @@ import ru.reeson2003.my3d.entities.Entity;
 import ru.reeson2003.my3d.models.RawModel;
 import ru.reeson2003.my3d.models.TexturedModel;
 import ru.reeson2003.my3d.shaders.StaticShader;
+import ru.reeson2003.my3d.textures.ModelTexture;
 import ru.reeson2003.my3d.tools.Maths;
 
 /**
@@ -25,6 +26,8 @@ public class Renderer {
     }
 
     public void render(Entity entity, StaticShader shader) {
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_BACK);
         TexturedModel texturedModel = entity.getModel();
         RawModel model = texturedModel.getRawModel();
         GL30.glBindVertexArray(model.getVaoID());
@@ -39,8 +42,10 @@ public class Renderer {
 
         createProjectionMatrix();
         shader.loadProjectionMatrix(projectionMatrix);
-
         shader.loadTransformationMatrix(transformationMatrix);
+        ModelTexture texture = texturedModel.getTexture();
+        shader.loadShineVariaables(texture.getShineDamper(), texture.getReflectivity());
+
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturedModel.getTexture().getId());
         GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
