@@ -38,7 +38,7 @@ public class Loader {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             InputStream stream = loader.getResourceAsStream(fileName);
-            texture = TextureLoader.getTexture("PNG", stream);
+            texture = TextureLoader.getTexture(fileName.substring(fileName.indexOf('.')), stream);
         } catch (IOException e) {
             e.printStackTrace();
         }

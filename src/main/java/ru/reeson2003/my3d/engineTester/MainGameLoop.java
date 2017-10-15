@@ -10,6 +10,7 @@ import ru.reeson2003.my3d.models.TexturedModel;
 import ru.reeson2003.my3d.renderEngine.DisplayManager;
 import ru.reeson2003.my3d.renderEngine.Loader;
 import ru.reeson2003.my3d.models.RawModel;
+import ru.reeson2003.my3d.renderEngine.OBJLoader;
 import ru.reeson2003.my3d.renderEngine.Renderer;
 import ru.reeson2003.my3d.shaders.StaticShader;
 import ru.reeson2003.my3d.textures.ModelTexture;
@@ -22,28 +23,10 @@ import java.util.Random;
 public class MainGameLoop {
     public static final int WIDTH = 800;
     public static final int HEIGHT = 400;
-    public static final int FPS = 120;
+    public static final int FPS = 60;
     public static final String TITLE = "AWESOME";
     public static final float CAMERA_SPEED = 0.5f;
 
-    private static final float[] VERTICES = {
-            -0.5f, 0.5f, 0f, /*V0*/
-            -0.5f, -0.5f, 0f, /*V1*/
-            0.5f, -0.5f, 0f, /*V2*/
-            0.5f, 0.5f, 0f, /*V3*/
-    };
-
-    private static final int[] INDICES = {
-            0, 1, 3, /*TOP LEFT TRIANGLE (V0, V1, V3)*/
-            3, 1, 2 /*TOP RIGHT TRIANGLE (V3, V1, V2)*/
-    };
-
-    private static final float[] TEXTURE_COORDINATES = {
-            0, 0, /*V0*/
-            0, 1, /*V1*/
-            1, 1, /*V2*/
-            1, 0 /*V3*/
-    };
 
     public static void main(String[] args) {
         Loader loader = null;
@@ -54,29 +37,19 @@ public class MainGameLoop {
             loader = new Loader();
             renderer = new Renderer();
             shader = new StaticShader();
-            RawModel model = loader.loadToVAO(VERTICES, TEXTURE_COORDINATES, INDICES);
-            ModelTexture texture = new ModelTexture(loader.loadTexture("textures/mario.png"));
+            Shape shape = new Cube();
+            RawModel model = OBJLoader.loadModel("models/stall/stall.obj", loader);
+            ModelTexture texture = new ModelTexture(loader.loadTexture("models/stall/stallTexture.png"));
             TexturedModel texturedModel = new TexturedModel(model, texture);
-            Random random = new Random(System.nanoTime());
-//            Entity entity = new Entity(texturedModel, new Vector3f(0,0,-3), 0, 0, 0, 1);
+            Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -50), 0, 0, 0, 1);
             Camera camera = new Camera(CAMERA_SPEED);
-            Entity[] entities = new Entity[500];
-            float[] speeds = new float[entities.length];
-            for (int i = 0; i < entities.length; i++) {
-                entities[i] = generateEntity(texturedModel, random);
-                speeds[i] = getRandomFloat(random, -0.05f, -0.001f);
-            }
             while (!Display.isCloseRequested()) {
                 camera.move();
                 renderer.prepare();
                 shader.start();
                 shader.loadViewMatrix(camera);
-//                renderer.render(entity, shader);
-                for (int i = 0; i < entities.length; i++) {
-                    renderer.render(entities[i], shader);
-//                    entities[i].increaseRotation(1f, 1f, 1f);
-//                    entities[i].increasePosition(0, 0, speeds[i]);
-                }
+                renderer.render(entity, shader);
+                entity.increaseRotation(0, 0.5f, 0);
                 shader.stop();
                 DisplayManager.updateDisplay();
             }
