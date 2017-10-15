@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.TextureLoader;
 import ru.reeson2003.my3d.entities.Camera;
 import ru.reeson2003.my3d.entities.Entity;
+import ru.reeson2003.my3d.entities.Light;
 import ru.reeson2003.my3d.models.TexturedModel;
 import ru.reeson2003.my3d.renderEngine.DisplayManager;
 import ru.reeson2003.my3d.renderEngine.Loader;
@@ -42,11 +43,13 @@ public class MainGameLoop {
             ModelTexture texture = new ModelTexture(loader.loadTexture("models/stall/stallTexture.png"));
             TexturedModel texturedModel = new TexturedModel(model, texture);
             Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -50), 0, 0, 0, 1);
+            Light light = new Light(new Vector3f(0, 0, -25), new Vector3f(1, 1, 0.8f));
             Camera camera = new Camera(CAMERA_SPEED);
             while (!Display.isCloseRequested()) {
                 camera.move();
                 renderer.prepare();
                 shader.start();
+                shader.loadLight(light);
                 shader.loadViewMatrix(camera);
                 renderer.render(entity, shader);
                 entity.increaseRotation(0, 0.5f, 0);
