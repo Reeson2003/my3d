@@ -25,16 +25,23 @@ public class FlatCameraControl implements CameraControl {
     @Override
     public void move() {
         if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            position.z -= speed;
+//            position.z -= speed;
+            position.z -= speed * Math.cos(Math.toRadians(yawPitchRoll.getX()));
+            position.x += speed * Math.sin(Math.toRadians(yawPitchRoll.getX()));
+            position.y -= speed * Math.sin(Math.toRadians(yawPitchRoll.getY()));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            position.z += speed;
+            position.z += speed * Math.cos(Math.toRadians(yawPitchRoll.getX()));
+            position.x -= speed * Math.sin(Math.toRadians(yawPitchRoll.getX()));
+            position.y += speed * Math.sin(Math.toRadians(yawPitchRoll.getY()));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-            position.x += speed;
+            position.z -= speed * (Math.cos(Math.toRadians(yawPitchRoll.getX()) - Math.PI/2d));
+            position.x += speed * (Math.sin(Math.toRadians(yawPitchRoll.getX()) - Math.PI/2d));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            position.x -= speed;
+            position.z += speed * (Math.cos(Math.toRadians(yawPitchRoll.getX()) - Math.PI/2d));
+            position.x -= speed * (Math.sin(Math.toRadians(yawPitchRoll.getX()) - Math.PI/2d));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
             position.y += speed;
