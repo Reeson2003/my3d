@@ -10,11 +10,13 @@ public class Camera {
     private CameraControl control;
 
     public Camera(float speed) {
-        this.control = new FlatCameraControl(speed);
+//        this.control = new FreeCameraControl(speed);
+        this.control = new FPVCameraControl(speed);
     }
 
     public Camera(float speed, Vector3f position, Vector3f yawPitchRoll) {
-        this.control = new FlatCameraControl(speed, position, yawPitchRoll);
+//        this.control = new FreeCameraControl(speed, position, yawPitchRoll);
+        this.control = new FPVCameraControl(speed, position, yawPitchRoll);
     }
 
     public void move() {
