@@ -8,14 +8,13 @@ import ru.reeson2003.my3d.entities.Camera;
 import ru.reeson2003.my3d.entities.Entity;
 import ru.reeson2003.my3d.entities.Light;
 import ru.reeson2003.my3d.models.TexturedModel;
-import ru.reeson2003.my3d.renderEngine.DisplayManager;
-import ru.reeson2003.my3d.renderEngine.Loader;
+import ru.reeson2003.my3d.renderEngine.*;
 import ru.reeson2003.my3d.models.RawModel;
-import ru.reeson2003.my3d.renderEngine.OBJLoader;
-import ru.reeson2003.my3d.renderEngine.Renderer;
 import ru.reeson2003.my3d.shaders.StaticShader;
 import ru.reeson2003.my3d.textures.ModelTexture;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -36,29 +35,33 @@ public class MainGameLoop {
         try {
             DisplayManager.createDisplay(WIDTH, HEIGHT, FPS, TITLE);
             loader = new Loader();
-            renderer = new Renderer();
             shader = new StaticShader();
-            Shape shape = new Cube();
             RawModel model = OBJLoader.loadModel("models/dragon/dragon.obj", loader);
             ModelTexture texture = new ModelTexture(loader.loadTexture("models/dragon/dragon.png"));
             texture.setReflectivity(10f);
             texture.setShineDamper(50f);
             TexturedModel texturedModel = new TexturedModel(model, texture);
-            Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -50), 0, 0, 0, 1);
+//            Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -50), 0, 0, 0, 1);
             Light cold = new Light(new Vector3f(-25, 25, -25), new Vector3f(1f, 0.3f, 0.1f));
+            Random random = new Random(System.nanoTime());
+            List<Entity> entities = new ArrayList<>();
+            for (int i = 0; i < 20; i++) {
+                entities.add(generateEntity(texturedModel, random));
+            }
             Camera camera = new Camera(CAMERA_SPEED);
+
+            MasterRenderer masterRenderer = new MasterRenderer();
             while (!Display.isCloseRequested()) {
                 camera.move();
-                renderer.prepare();
-                shader.start();
-                shader.loadLight(cold);
-                shader.loadViewMatrix(camera);
-                renderer.render(entity, shader);
-                entity.increaseRotation(0, 0.5f, 0);
-                shader.stop();
+                for (Entity entity : entities) {
+                    masterRenderer.processEntity(entity);
+                    entity.increasePosition(0,0,-10f);
+                    entity.increaseRotation(1f, 1f, 0);
+                }
+                masterRenderer.render(cold, camera);
                 DisplayManager.updateDisplay();
             }
-
+            masterRenderer.cleanUp();
         } catch (LWJGLException e) {
             e.printStackTrace();
         } finally {
