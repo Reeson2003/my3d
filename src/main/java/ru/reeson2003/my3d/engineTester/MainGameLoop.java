@@ -24,7 +24,7 @@ import java.util.Random;
 public class MainGameLoop {
     public static final int WIDTH = 800;
     public static final int HEIGHT = 400;
-    public static final int FPS = 120;
+    public static final int FPS = 60;
     public static final String TITLE = "AWESOME";
     public static final float CAMERA_SPEED = 0.5f;
 
