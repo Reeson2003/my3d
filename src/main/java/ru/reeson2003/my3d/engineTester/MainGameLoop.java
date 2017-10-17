@@ -3,7 +3,6 @@ package ru.reeson2003.my3d.engineTester;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.opengl.TextureLoader;
 import ru.reeson2003.my3d.entities.Camera;
 import ru.reeson2003.my3d.entities.Entity;
 import ru.reeson2003.my3d.entities.Light;
@@ -11,6 +10,7 @@ import ru.reeson2003.my3d.models.TexturedModel;
 import ru.reeson2003.my3d.renderEngine.*;
 import ru.reeson2003.my3d.models.RawModel;
 import ru.reeson2003.my3d.shaders.StaticShader;
+import ru.reeson2003.my3d.terrains.Terrain;
 import ru.reeson2003.my3d.textures.ModelTexture;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class MainGameLoop {
 
     public static void main(String[] args) {
         Loader loader = null;
-        Renderer renderer = null;
+        EntityRenderer entityRenderer = null;
         StaticShader shader = null;
         try {
             DisplayManager.createDisplay(WIDTH, HEIGHT, FPS, TITLE);
@@ -41,23 +41,28 @@ public class MainGameLoop {
             texture.setReflectivity(10f);
             texture.setShineDamper(50f);
             TexturedModel texturedModel = new TexturedModel(model, texture);
-//            Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -50), 0, 0, 0, 1);
-            Light cold = new Light(new Vector3f(-25, 25, -25), new Vector3f(1f, 0.3f, 0.1f));
-            Random random = new Random(System.nanoTime());
-            List<Entity> entities = new ArrayList<>();
-            for (int i = 0; i < 20; i++) {
-                entities.add(generateEntity(texturedModel, random));
-            }
-            Camera camera = new Camera(CAMERA_SPEED);
+            Entity entity = new Entity(texturedModel, new Vector3f(100, 0, 100), 0, 0, 0, 1);
+            Light cold = new Light(new Vector3f(3000, 2000, 2000), new Vector3f(1f, 1f, 1f));
+            Terrain terrain = new Terrain(0,0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
+            Terrain terrain2 = new Terrain(1,0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
+//            Random random = new Random(System.nanoTime());
+//            List<Entity> entities = new ArrayList<>();
+//            for (int i = 0; i < 20; i++) {
+//                entities.add(generateEntity(texturedModel, random));
+//            }
+            Camera camera = new Camera(CAMERA_SPEED, new Vector3f(120,10,150), new Vector3f(-30, 0, 0));
 
             MasterRenderer masterRenderer = new MasterRenderer();
             while (!Display.isCloseRequested()) {
                 camera.move();
-                for (Entity entity : entities) {
-                    masterRenderer.processEntity(entity);
-                    entity.increasePosition(0,0,-10f);
-                    entity.increaseRotation(1f, 1f, 0);
-                }
+//                for (Entity entity : entities) {
+//                    masterRenderer.processEntity(entity);
+//                    entity.increasePosition(0,0,-10f);
+//                    entity.increaseRotation(1f, 1f, 0);
+//                }
+                masterRenderer.processTerrain(terrain);
+                masterRenderer.processTerrain(terrain2);
+                masterRenderer.processEntity(entity);
                 masterRenderer.render(cold, camera);
                 DisplayManager.updateDisplay();
             }
