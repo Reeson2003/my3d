@@ -3,15 +3,17 @@ package ru.reeson2003.my3d.engineTester;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
-import ru.reeson2003.my3d.entities.Camera;
-import ru.reeson2003.my3d.entities.Entity;
-import ru.reeson2003.my3d.entities.Light;
-import ru.reeson2003.my3d.models.TexturedModel;
-import ru.reeson2003.my3d.renderEngine.*;
+import ru.reeson2003.my3d.entities.*;
 import ru.reeson2003.my3d.models.RawModel;
-import ru.reeson2003.my3d.shaders.StaticShader;
+import ru.reeson2003.my3d.models.TexturedModel;
+import ru.reeson2003.my3d.renderEngine.DisplayManager;
+import ru.reeson2003.my3d.renderEngine.Loader;
+import ru.reeson2003.my3d.renderEngine.MasterRenderer;
+import ru.reeson2003.my3d.renderEngine.OBJLoader;
 import ru.reeson2003.my3d.terrains.Terrain;
 import ru.reeson2003.my3d.textures.ModelTexture;
+import ru.reeson2003.my3d.ticker.Ticker;
+import ru.reeson2003.my3d.ticker.TickerImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,7 @@ public class MainGameLoop {
 
     public static void main(String[] args) {
         try {
+            Ticker ticker = new TickerImpl(20);
             DisplayManager.createDisplay(WIDTH, HEIGHT, FPS, TITLE);
             Loader loader = new Loader();
 
@@ -40,24 +43,25 @@ public class MainGameLoop {
 
             List<Entity> entities = new ArrayList<>();
             Random random = new Random();
-            for (int i = 0; i < 500; i++) {
-                entities.add(new Entity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 3));
+            for (int i = 0; i < 100; i++) {
+                entities.add(new Entity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 3+random.nextFloat() * 3));
             }
 
-            Light light = new Light(new Vector3f(-20000, 20000, 2000), new Vector3f(1, 1, 1));
+            Light light = new Light(new Vector3f(-2000, 2000, 200), new Vector3f(1, 1, 1));
 
             Terrain terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
             Terrain terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
 
-            Camera camera = new Camera(CAMERA_SPEED, new Vector3f(0,1,0), new Vector3f(125, 0, 0));
+            Camera camera = new FreeCamera(CAMERA_SPEED, new Vector3f(0,1,0), new Vector3f(125, 0, 0));
+//            Camera camera = new StaticCamera(new Vector3f(0,1,0), 125, 0, 0);
 
             MasterRenderer renderer = new MasterRenderer();
 
             while (!Display.isCloseRequested()) {
-                camera.move();
+                ticker.tick();
 
                 renderer.processTerrain(terrain);
-//                renderer.processTerrain(terrain2);
+                renderer.processTerrain(terrain2);
                 for (Entity entity : entities) {
                     renderer.processEntity(entity);
                 }

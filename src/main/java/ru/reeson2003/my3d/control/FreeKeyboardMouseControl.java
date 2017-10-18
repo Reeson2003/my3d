@@ -1,29 +1,35 @@
-package ru.reeson2003.my3d.entities;
+package ru.reeson2003.my3d.control;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
+import ru.reeson2003.my3d.ticker.Ticker;
+import ru.reeson2003.my3d.ticker.TickerImpl;
+import ru.reeson2003.my3d.ticker.TickerListener;
 
 /**
  * Created by Toshiba on 15.10.2017.
  */
-public class FreeCameraControl implements CameraControl {
+public class FreeKeyboardMouseControl implements Control, TickerListener {
     private float speed = 0.1f;
     private Vector3f position = new Vector3f(0, 0, 0);
     private Vector3f yawPitchRoll = new Vector3f(0, 0, 0);
 
-    public FreeCameraControl(float speed, Vector3f position, Vector3f yawPitchRoll) {
-        this.speed = speed;
+    public FreeKeyboardMouseControl(float speed, Vector3f position, Vector3f yawPitchRoll) {
+        this(speed);
         this.position = position;
         this.yawPitchRoll = yawPitchRoll;
     }
 
-    public FreeCameraControl(float speed) {
+    public FreeKeyboardMouseControl(float speed) {
+        Ticker ticker = TickerImpl.getInstance();
+        if (ticker != null)
+            ticker.addListener(this);
         this.speed = speed;
     }
 
     @Override
-    public void move() {
+    public void tick() {
         if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
             position.z -= speed * Math.cos(Math.toRadians(yawPitchRoll.getX()));
             position.x += speed * Math.sin(Math.toRadians(yawPitchRoll.getX()));
@@ -75,17 +81,17 @@ public class FreeCameraControl implements CameraControl {
     }
 
     @Override
-    public float getYaw() {
+    public float getRotX() {
         return yawPitchRoll.x;
     }
 
     @Override
-    public float getPitch() {
+    public float getRotY() {
         return yawPitchRoll.y;
     }
 
     @Override
-    public float getRoll() {
+    public float getRotZ() {
         return yawPitchRoll.z;
     }
 }
