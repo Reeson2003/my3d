@@ -3,6 +3,8 @@ package ru.reeson2003.my3d.engineTester;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
+import ru.reeson2003.my3d.control.Control;
+import ru.reeson2003.my3d.control.FlatKeyboardMouseControl;
 import ru.reeson2003.my3d.entities.*;
 import ru.reeson2003.my3d.models.RawModel;
 import ru.reeson2003.my3d.models.TexturedModel;
@@ -44,16 +46,19 @@ public class MainGameLoop {
             List<Entity> entities = new ArrayList<>();
             Random random = new Random();
             for (int i = 0; i < 100; i++) {
-                entities.add(new Entity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 3+random.nextFloat() * 3));
+                entities.add(new StaticEntity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 3+random.nextFloat() * 3));
             }
+            Entity controlable = new StaticEntity(staticModel, new Vector3f(10, 0, 10), 0, 0, 0, 3 * 5);
+            Control entityControl = new FlatKeyboardMouseControl(1f, new Vector3f(100, 0, 100), new Vector3f(0,0,0));
+            entities.add(new ControlableEntity(controlable, entityControl));
 
             Light light = new Light(new Vector3f(-2000, 2000, 200), new Vector3f(1, 1, 1));
 
             Terrain terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
             Terrain terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
 
-            Camera camera = new FreeCamera(CAMERA_SPEED, new Vector3f(0,1,0), new Vector3f(125, 0, 0));
-//            Camera camera = new StaticCamera(new Vector3f(0,1,0), 125, 0, 0);
+//            Camera camera = new FreeCamera(CAMERA_SPEED, new Vector3f(0,1,0), new Vector3f(125, 0, 0));
+            Camera camera = new StaticCamera(new Vector3f(0,10,0), 130, 5, 0);
 
             MasterRenderer renderer = new MasterRenderer();
 
