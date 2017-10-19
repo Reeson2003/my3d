@@ -14,6 +14,8 @@ import ru.reeson2003.my3d.renderEngine.MasterRenderer;
 import ru.reeson2003.my3d.renderEngine.OBJLoader;
 import ru.reeson2003.my3d.terrains.Terrain;
 import ru.reeson2003.my3d.textures.ModelTexture;
+import ru.reeson2003.my3d.textures.TerrainTexture;
+import ru.reeson2003.my3d.textures.TerrainTexturePack;
 import ru.reeson2003.my3d.ticker.Ticker;
 import ru.reeson2003.my3d.ticker.TickerImpl;
 
@@ -43,9 +45,11 @@ public class MainGameLoop {
 //            Control entityControl = new FlatKeyboardMouseControl(1f, new Vector3f(100, 0, 100), new Vector3f(0, 0, 0));
 //            entities.add(new ControlableEntity(controlable, entityControl));
 
+            TerrainTexturePack texturePack = getTexturePack(loader);
+            TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("textures/blendMap.png"));
             Light light = new Light(new Vector3f(-2000, 2000, 200), new Vector3f(0.5f, 0.5f, 0.5f));
 
-            Terrain terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("textures/grass2.png")));
+            Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
 //            Terrain terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
 
             Camera camera = new FreeCamera(CAMERA_SPEED, new Vector3f(0,1,0), new Vector3f(125, 0, 0));
@@ -90,7 +94,7 @@ public class MainGameLoop {
         staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/grassTexture.png")));
         staticModel.getTexture().setHasTransparency(true);
         staticModel.getTexture().setUseFakeLighting(true);
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < 50; i++) {
             entities.add(new StaticEntity(staticModel, new Vector3f(25 + random.nextFloat() * 800, 0, 25 +random.nextFloat() * 600), 0, 0, 0, 2));
         }
         staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/flower.png")));
@@ -106,5 +110,13 @@ public class MainGameLoop {
             entities.add(new StaticEntity(staticModel, new Vector3f(25 + random.nextFloat() * 800, 0, 25 +random.nextFloat() * 600), 0, 0, 0, 1.2f));
         }
         return entities;
+    }
+
+    private static TerrainTexturePack getTexturePack(Loader loader) {
+        TerrainTexture background = new TerrainTexture(loader.loadTexture("textures/grassy2.png"));
+        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("textures/mud.png"));
+        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("textures/grassFlowers.png"));
+        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("textures/path.png"));
+        return new TerrainTexturePack(background, rTexture, gTexture, bTexture);
     }
 }

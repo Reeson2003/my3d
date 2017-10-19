@@ -3,6 +3,8 @@ package ru.reeson2003.my3d.terrains;
 import ru.reeson2003.my3d.models.RawModel;
 import ru.reeson2003.my3d.renderEngine.Loader;
 import ru.reeson2003.my3d.textures.ModelTexture;
+import ru.reeson2003.my3d.textures.TerrainTexture;
+import ru.reeson2003.my3d.textures.TerrainTexturePack;
 
 public class Terrain {
     private static final float SIZE = 800;
@@ -11,10 +13,12 @@ public class Terrain {
     private float x;
     private float z;
     private RawModel model;
-    private ModelTexture texture;
+    private TerrainTexturePack texturePack;
+    private TerrainTexture blendMap;
 
-    public Terrain(int gridX, int gridZ, Loader loader, ModelTexture texture) {
-        this.texture = texture;
+    public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap) {
+        this.texturePack = texturePack;
+        this.blendMap = blendMap;
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
         this.model = generateTerrain(loader);
@@ -70,7 +74,11 @@ public class Terrain {
         return model;
     }
 
-    public ModelTexture getTexture() {
-        return texture;
+    public TerrainTexturePack getTexturePack() {
+        return texturePack;
+    }
+
+    public TerrainTexture getBlendMap() {
+        return blendMap;
     }
 }
