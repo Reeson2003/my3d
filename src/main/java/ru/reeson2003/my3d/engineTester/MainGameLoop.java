@@ -78,32 +78,32 @@ public class MainGameLoop {
         RawModel model = OBJLoader.loadModel("models/lowPolyTree/lowPolyTree.obj", loader);
         TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/lowPolyTree/lowPolyTree.png")));
         Random random = new Random();
-        for (int i = 0; i < 50; i++) {
-            entities.add(new StaticEntity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 1f));
+        for (int i = 0; i < 100; i++) {
+            entities.add(new StaticEntity(staticModel, new Vector3f(25 + random.nextFloat() * 800, 0, 25 +random.nextFloat() * 600), 0, random.nextFloat()*360, 0, 1f));
         }
         model = OBJLoader.loadModel("models/tree/tree.obj", loader);
         staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/tree/tree.png")));
-        for (int i = 0; i < 50; i++) {
-            entities.add(new StaticEntity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 10f));
+        for (int i = 0; i < 100; i++) {
+            entities.add(new StaticEntity(staticModel, new Vector3f(25 + random.nextFloat() * 800, 0, 25 +random.nextFloat() * 600), 0, 0, 0, 6f));
         }
         model = OBJLoader.loadModel("models/grass/grassModel.obj", loader);
         staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/grassTexture.png")));
         staticModel.getTexture().setHasTransparency(true);
         staticModel.getTexture().setUseFakeLighting(true);
-        for (int i = 0; i < 50; i++) {
-            entities.add(new StaticEntity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 2));
+        for (int i = 0; i < 5000; i++) {
+            entities.add(new StaticEntity(staticModel, new Vector3f(25 + random.nextFloat() * 800, 0, 25 +random.nextFloat() * 600), 0, 0, 0, 2));
         }
         staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/flower.png")));
         staticModel.getTexture().setHasTransparency(true);
         staticModel.getTexture().setUseFakeLighting(true);
         for (int i = 0; i < 50; i++) {
-            entities.add(new StaticEntity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 2));
+            entities.add(new StaticEntity(staticModel, new Vector3f(25 + random.nextFloat() * 800, 0, 25 +random.nextFloat() * 600), 0, 0, 0, 2));
         }
         model = OBJLoader.loadModel("models/fern/fern.obj", loader);
         staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/fern/fern.png")));
         staticModel.getTexture().setHasTransparency(true);
-        for (int i = 0; i < 50; i++) {
-            entities.add(new StaticEntity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 1.2f));
+        for (int i = 0; i < 100; i++) {
+            entities.add(new StaticEntity(staticModel, new Vector3f(25 + random.nextFloat() * 800, 0, 25 +random.nextFloat() * 600), 0, 0, 0, 1.2f));
         }
         return entities;
     }
