@@ -43,7 +43,7 @@ public class MainGameLoop {
 //            Control entityControl = new FlatKeyboardMouseControl(1f, new Vector3f(100, 0, 100), new Vector3f(0, 0, 0));
 //            entities.add(new ControlableEntity(controlable, entityControl));
 
-            Light light = new Light(new Vector3f(-2000, 2000, 200), new Vector3f(1, 1, 1));
+            Light light = new Light(new Vector3f(-2000, 2000, 200), new Vector3f(0.5f, 0.5f, 0.5f));
 
             Terrain terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("textures/grass2.png")));
 //            Terrain terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
@@ -102,7 +102,6 @@ public class MainGameLoop {
         model = OBJLoader.loadModel("models/fern/fern.obj", loader);
         staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/fern/fern.png")));
         staticModel.getTexture().setHasTransparency(true);
-        staticModel.getTexture().setUseFakeLighting(true);
         for (int i = 0; i < 50; i++) {
             entities.add(new StaticEntity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 1.2f));
         }
