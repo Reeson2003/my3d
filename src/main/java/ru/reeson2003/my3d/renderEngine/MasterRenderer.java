@@ -10,6 +10,7 @@ import ru.reeson2003.my3d.models.TexturedModel;
 import ru.reeson2003.my3d.shaders.StaticShader;
 import ru.reeson2003.my3d.shaders.TerrainShader;
 import ru.reeson2003.my3d.terrains.Terrain;
+import ru.reeson2003.my3d.tools.FloatColour;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,9 +24,11 @@ public class MasterRenderer {
     private static final float FOV = 70;
     private static final float NEAR_PLANE = 0.1f;
     private static final float FAR_PLANE = 1000f;
-    private static final float SKY_RED = 153f / 255f;
-    private static final float SKY_GREEN = 231f  / 255f;
-    private static final float SKY_BLUE = 255f / 255f;
+//    private static final float SKY_RED = 153f / 255f;
+//    private static final float SKY_GREEN = 231f  / 255f;
+//    private static final float SKY_BLUE = 255f / 255f;
+
+    private static final FloatColour SKY_COLOUR = new FloatColour(153, 231, 255);
 
     private Matrix4f projectionMatrix;
 
@@ -56,13 +59,13 @@ public class MasterRenderer {
     public void render(Light sun, Camera camera) {
         prepare();
         staticShader.start();
-        staticShader.loadSkyColour(SKY_RED, SKY_GREEN, SKY_BLUE);
+        staticShader.loadSkyColour(SKY_COLOUR.R, SKY_COLOUR.G, SKY_COLOUR.B);
         staticShader.loadLight(sun);
         staticShader.loadViewMatrix(camera);
         entityRenderer.render(entities);
         staticShader.stop();
         terrainShader.start();
-        terrainShader.loadSkyColour(SKY_RED, SKY_GREEN, SKY_BLUE);
+        terrainShader.loadSkyColour(SKY_COLOUR.R, SKY_COLOUR.G, SKY_COLOUR.B);
         terrainShader.loadLight(sun);
         terrainShader.loadViewMatrix(camera);
         terrainRenderer.render(terrains);
@@ -90,7 +93,7 @@ public class MasterRenderer {
     public void prepare() {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glClearColor(SKY_RED, SKY_GREEN, SKY_BLUE, 1);
+        GL11.glClearColor(SKY_COLOUR.R, SKY_COLOUR.G, SKY_COLOUR.B, 1);
     }
 
 
