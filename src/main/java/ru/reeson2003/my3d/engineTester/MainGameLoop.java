@@ -38,27 +38,18 @@ public class MainGameLoop {
             DisplayManager.createDisplay(WIDTH, HEIGHT, FPS, TITLE);
             Loader loader = new Loader();
 
-
-            RawModel model = OBJLoader.loadModel("models/tree/tree.obj", loader);
-
-            TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/tree/tree.png")));
-
-            List<Entity> entities = new ArrayList<>();
-            Random random = new Random();
-            for (int i = 0; i < 100; i++) {
-                entities.add(new StaticEntity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 3+random.nextFloat() * 3));
-            }
-            Entity controlable = new StaticEntity(staticModel, new Vector3f(10, 0, 10), 0, 0, 0, 3 * 5);
-            Control entityControl = new FlatKeyboardMouseControl(1f, new Vector3f(100, 0, 100), new Vector3f(0,0,0));
-            entities.add(new ControlableEntity(controlable, entityControl));
+            List<Entity> entities = generateEntities(loader);
+//            Entity controlable = new StaticEntity(staticModel, new Vector3f(10, 0, 10), 0, 0, 0, 3 * 5);
+//            Control entityControl = new FlatKeyboardMouseControl(1f, new Vector3f(100, 0, 100), new Vector3f(0, 0, 0));
+//            entities.add(new ControlableEntity(controlable, entityControl));
 
             Light light = new Light(new Vector3f(-2000, 2000, 200), new Vector3f(1, 1, 1));
 
-            Terrain terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
-            Terrain terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
+            Terrain terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("textures/grass2.png")));
+//            Terrain terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
 
-//            Camera camera = new FreeCamera(CAMERA_SPEED, new Vector3f(0,1,0), new Vector3f(125, 0, 0));
-            Camera camera = new StaticCamera(new Vector3f(0,10,0), 130, 5, 0);
+            Camera camera = new FreeCamera(CAMERA_SPEED, new Vector3f(0,1,0), new Vector3f(125, 0, 0));
+//            Camera camera = new StaticCamera(new Vector3f(0, 100, 0), 130, 20, 0);
 
             MasterRenderer renderer = new MasterRenderer();
 
@@ -66,7 +57,7 @@ public class MainGameLoop {
                 ticker.tick();
 
                 renderer.processTerrain(terrain);
-                renderer.processTerrain(terrain2);
+//                renderer.processTerrain(terrain2);
                 for (Entity entity : entities) {
                     renderer.processEntity(entity);
                 }
@@ -80,5 +71,41 @@ public class MainGameLoop {
         } catch (LWJGLException e) {
             e.printStackTrace();
         }
+    }
+
+    private static List<Entity> generateEntities(Loader loader) {
+        List<Entity> entities = new ArrayList<>();
+        RawModel model = OBJLoader.loadModel("models/lowPolyTree/lowPolyTree.obj", loader);
+        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/lowPolyTree/lowPolyTree.png")));
+        Random random = new Random();
+        for (int i = 0; i < 50; i++) {
+            entities.add(new StaticEntity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 1f));
+        }
+        model = OBJLoader.loadModel("models/tree/tree.obj", loader);
+        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/tree/tree.png")));
+        for (int i = 0; i < 50; i++) {
+            entities.add(new StaticEntity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 10f));
+        }
+        model = OBJLoader.loadModel("models/grass/grassModel.obj", loader);
+        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/grassTexture.png")));
+        staticModel.getTexture().setHasTransparency(true);
+        staticModel.getTexture().setUseFakeLighting(true);
+        for (int i = 0; i < 50; i++) {
+            entities.add(new StaticEntity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 2));
+        }
+        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/flower.png")));
+        staticModel.getTexture().setHasTransparency(true);
+        staticModel.getTexture().setUseFakeLighting(true);
+        for (int i = 0; i < 50; i++) {
+            entities.add(new StaticEntity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 2));
+        }
+        model = OBJLoader.loadModel("models/fern/fern.obj", loader);
+        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/fern/fern.png")));
+        staticModel.getTexture().setHasTransparency(true);
+        staticModel.getTexture().setUseFakeLighting(true);
+        for (int i = 0; i < 50; i++) {
+            entities.add(new StaticEntity(staticModel, new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 600), 0, 0, 0, 1.2f));
+        }
+        return entities;
     }
 }
