@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Created by Pavel Gavrilov on 20.10.2017.
  */
-public class TerrainLoader {
+public class RestTerrainLoader {
     public static final String URL = "http://localhost:8080/terrain";
     private RestTemplate restTemplate = new RestTemplate();
 

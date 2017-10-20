@@ -1,4 +1,4 @@
-import ru.reeson2003.my3d.client.rest.TerrainLoader;
+import ru.reeson2003.my3d.client.rest.RestTerrainLoader;
 import ru.reeson2003.my3d.common.Geometry;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class TerrainLoaderTest {
     public static void main(String[] args) {
-        TerrainLoader loader = new TerrainLoader();
+        RestTerrainLoader loader = new RestTerrainLoader();
         Map<Long, List<Geometry>> longListMap = loader.loadTerrainObjects();
         System.out.println(longListMap);
     }

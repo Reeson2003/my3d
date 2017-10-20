@@ -10,16 +10,18 @@ import ru.reeson2003.my3d.client.renderEngine.DisplayManager;
 import ru.reeson2003.my3d.client.renderEngine.Loader;
 import ru.reeson2003.my3d.client.renderEngine.MasterRenderer;
 import ru.reeson2003.my3d.client.renderEngine.OBJLoader;
+import ru.reeson2003.my3d.client.rest.RestTerrainLoader;
 import ru.reeson2003.my3d.client.terrains.Terrain;
 import ru.reeson2003.my3d.client.textures.ModelTexture;
 import ru.reeson2003.my3d.client.textures.TerrainTexture;
 import ru.reeson2003.my3d.client.textures.TerrainTexturePack;
 import ru.reeson2003.my3d.client.ticker.Ticker;
 import ru.reeson2003.my3d.client.ticker.TickerImpl;
+import ru.reeson2003.my3d.common.Geometry;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 
 /**
  * Created by Pavel Gavrilov on 12.10.2017.
@@ -50,7 +52,7 @@ public class MainGameLoop {
             Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
 //            Terrain terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
 
-            Camera camera = new FreeCamera(CAMERA_SPEED, new Vector3f(0,1,0), new Vector3f(125, 0, 0));
+            Camera camera = new FreeCamera(CAMERA_SPEED, new Vector3f(0, 1, 0), new Vector3f(125, 0, 0));
 //            Camera camera = new StaticCamera(new Vector3f(0, 100, 0), 130, 20, 0);
 
             MasterRenderer renderer = new MasterRenderer();
@@ -77,35 +79,46 @@ public class MainGameLoop {
 
     private static List<Entity> generateEntities(Loader loader) {
         List<Entity> entities = new ArrayList<>();
+        RestTerrainLoader restTerrainLoader = new RestTerrainLoader();
+        Map<Long, List<Geometry>> geometries = restTerrainLoader.loadTerrainObjects();
         RawModel model = OBJLoader.loadModel("models/lowPolyTree/lowPolyTree.obj", loader);
         TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/lowPolyTree/lowPolyTree.png")));
-        Random random = new Random();
-        for (int i = 0; i < 100; i++) {
-            entities.add(new StaticEntity(staticModel, new Vector3f(25 + random.nextFloat() * 800, 0, 25 +random.nextFloat() * 600), 0, random.nextFloat()*360, 0, 1f));
+        List<Geometry> geometryList = geometries.get(1L);
+        for (int i = 0; i < geometryList.size(); i++) {
+            Geometry g = geometryList.get(i);
+            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
         model = OBJLoader.loadModel("models/tree/tree.obj", loader);
         staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/tree/tree.png")));
-        for (int i = 0; i < 100; i++) {
-            entities.add(new StaticEntity(staticModel, new Vector3f(25 + random.nextFloat() * 800, 0, 25 +random.nextFloat() * 600), 0, 0, 0, 6f));
+        geometryList = geometries.get(2L);
+        for (int i = 0; i < geometryList.size(); i++) {
+            Geometry g = geometryList.get(i);
+            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
         model = OBJLoader.loadModel("models/grass/grassModel.obj", loader);
         staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/grassTexture.png")));
         staticModel.getTexture().setHasTransparency(true);
         staticModel.getTexture().setUseFakeLighting(true);
-        for (int i = 0; i < 50; i++) {
-            entities.add(new StaticEntity(staticModel, new Vector3f(25 + random.nextFloat() * 800, 0, 25 +random.nextFloat() * 600), 0, 0, 0, 2));
+        geometryList = geometries.get(3L);
+        for (int i = 0; i < geometryList.size(); i++) {
+            Geometry g = geometryList.get(i);
+            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
         staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/flower.png")));
         staticModel.getTexture().setHasTransparency(true);
         staticModel.getTexture().setUseFakeLighting(true);
-        for (int i = 0; i < 50; i++) {
-            entities.add(new StaticEntity(staticModel, new Vector3f(25 + random.nextFloat() * 800, 0, 25 +random.nextFloat() * 600), 0, 0, 0, 2));
+        geometryList = geometries.get(4L);
+        for (int i = 0; i < geometryList.size(); i++) {
+            Geometry g = geometryList.get(i);
+            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
         model = OBJLoader.loadModel("models/fern/fern.obj", loader);
         staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/fern/fern.png")));
         staticModel.getTexture().setHasTransparency(true);
-        for (int i = 0; i < 100; i++) {
-            entities.add(new StaticEntity(staticModel, new Vector3f(25 + random.nextFloat() * 800, 0, 25 +random.nextFloat() * 600), 0, 0, 0, 1.2f));
+        geometryList = geometries.get(5L);
+        for (int i = 0; i < geometryList.size(); i++) {
+            Geometry g = geometryList.get(i);
+            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
         return entities;
     }
