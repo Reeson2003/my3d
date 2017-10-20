@@ -1,0 +1,2 @@
+- Run maven install
+- Set up vm options: -Djava.library.path=my3dclient/target/natives

@@ -3,3 +3,6 @@
 /.idea/
 /target/
 /my-3d.iml
+/my3dserver/my3dserver.iml
+/my3dcommon/my3dcommon.iml
+/my3dclient/my3dclient.iml
