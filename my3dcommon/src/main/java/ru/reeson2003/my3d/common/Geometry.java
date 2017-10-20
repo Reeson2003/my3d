@@ -12,6 +12,9 @@ public class Geometry {
     private float rotZ;
     private float scale;
 
+    public Geometry() {
+    }
+
     public Geometry(float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float scale) {
         this.posX = posX;
         this.posY = posY;
@@ -61,5 +64,33 @@ public class Geometry {
                 ", rotZ=" + rotZ +
                 ", scale=" + scale +
                 '}';
+    }
+
+    public void setPosX(float posX) {
+        this.posX = posX;
+    }
+
+    public void setPosY(float posY) {
+        this.posY = posY;
+    }
+
+    public void setPosZ(float posZ) {
+        this.posZ = posZ;
+    }
+
+    public void setRotX(float rotX) {
+        this.rotX = rotX;
+    }
+
+    public void setRotY(float rotY) {
+        this.rotY = rotY;
+    }
+
+    public void setRotZ(float rotZ) {
+        this.rotZ = rotZ;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 }

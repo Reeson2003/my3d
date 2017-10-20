@@ -15,14 +15,13 @@ public class FlatKeyboardMouseControl implements Control, TickerListener {
     private Vector3f position = new Vector3f(0, 0, 0);
     private Vector3f yawPitchRoll = new Vector3f(0, 0, 0);
 
-    public FlatKeyboardMouseControl(float speed, Vector3f position, Vector3f yawPitchRoll) {
-        this(speed);
+    public FlatKeyboardMouseControl(float speed, Vector3f position, Vector3f yawPitchRoll, Ticker ticker) {
+        this(speed, ticker);
         this.position = position;
         this.yawPitchRoll = yawPitchRoll;
     }
 
-    public FlatKeyboardMouseControl(float speed) {
-        Ticker ticker = TickerImpl.getInstance();
+    public FlatKeyboardMouseControl(float speed, Ticker ticker) {
         if (ticker != null)
             ticker.addListener(this);
         this.speed = speed;
