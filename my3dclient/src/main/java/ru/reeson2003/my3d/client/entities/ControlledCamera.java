@@ -7,16 +7,12 @@ import ru.reeson2003.my3d.client.control.FreeKeyboardMouseControl;
 /**
  * Created by Pavel Gavrilov on 13.10.2017.
  */
-public class FreeCamera implements Camera {
+public class ControlledCamera implements Camera {
 
     private CameraControl control;
 
-    public FreeCamera(float speed) {
-        this.control = new CameraControl(new FreeKeyboardMouseControl(speed));
-    }
-
-    public FreeCamera(float speed, Vector3f position, Vector3f yawPitchRoll) {
-        this.control = new CameraControl(new FreeKeyboardMouseControl(speed, position, yawPitchRoll));
+    public ControlledCamera(float speed, Vector3f position, Vector3f yawPitchRoll, CameraControl control) {
+        this.control = control;
     }
 
     @Override

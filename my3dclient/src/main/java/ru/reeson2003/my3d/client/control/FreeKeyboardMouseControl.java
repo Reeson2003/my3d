@@ -15,14 +15,13 @@ public class FreeKeyboardMouseControl implements Control, TickerListener {
     private Vector3f position = new Vector3f(0, 0, 0);
     private Vector3f yawPitchRoll = new Vector3f(0, 0, 0);
 
-    public FreeKeyboardMouseControl(float speed, Vector3f position, Vector3f yawPitchRoll) {
-        this(speed);
+    public FreeKeyboardMouseControl(float speed, Vector3f position, Vector3f yawPitchRoll, Ticker ticker) {
+        this(speed, ticker);
         this.position = position;
         this.yawPitchRoll = yawPitchRoll;
     }
 
-    public FreeKeyboardMouseControl(float speed) {
-        Ticker ticker = TickerImpl.getInstance();
+    public FreeKeyboardMouseControl(float speed, Ticker ticker) {
         if (ticker != null)
             ticker.addListener(this);
         this.speed = speed;

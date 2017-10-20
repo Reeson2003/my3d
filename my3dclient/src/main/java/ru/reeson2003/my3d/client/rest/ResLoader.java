@@ -8,13 +8,23 @@ import java.util.*;
 /**
  * Created by Pavel Gavrilov on 20.10.2017.
  */
-public class RestTerrainLoader {
-    public static final String URL = "http://localhost:8080/terrain";
+public class ResLoader {
+    public static final String URL = "http://localhost:8080/";
     private RestTemplate restTemplate = new RestTemplate();
 
-    public Map<Long, List<Geometry>> loadTerrainObjects() {
-        Map<String, List<Map<String, Double>>> result = restTemplate.getForObject(URL, Map.class);
+    public Map<Long, List<Geometry>> loadObjects(String path) {
+        Map<String, List<Map<String, Double>>> result = restTemplate.getForObject(URL + path, Map.class);
         return convert(result);
+    }
+
+    public Map<Long, List<Geometry>> loadTerrainObjects() {
+        String path = "terrain";
+        return loadObjects(path);
+    }
+
+    public Map<Long, List<Geometry>> loadEntityObjects() {
+        String path = "entity";
+        return loadObjects(path);
     }
 
     private Map<Long, List<Geometry>> convert(Map<String, List<Map<String, Double>>> raw) {
