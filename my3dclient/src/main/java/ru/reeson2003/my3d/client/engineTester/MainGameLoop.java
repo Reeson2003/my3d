@@ -3,9 +3,7 @@ package ru.reeson2003.my3d.client.engineTester;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
-import ru.reeson2003.my3d.client.control.CameraControl;
-import ru.reeson2003.my3d.client.control.Control;
-import ru.reeson2003.my3d.client.control.FreeKeyboardMouseControl;
+import ru.reeson2003.my3d.client.control.*;
 import ru.reeson2003.my3d.client.entities.*;
 import ru.reeson2003.my3d.client.models.RawModel;
 import ru.reeson2003.my3d.client.models.TexturedModel;
@@ -13,7 +11,7 @@ import ru.reeson2003.my3d.client.renderEngine.DisplayManager;
 import ru.reeson2003.my3d.client.renderEngine.Loader;
 import ru.reeson2003.my3d.client.renderEngine.MasterRenderer;
 import ru.reeson2003.my3d.client.renderEngine.OBJLoader;
-import ru.reeson2003.my3d.client.rest.ResLoader;
+import ru.reeson2003.my3d.client.rest.RestLoader;
 import ru.reeson2003.my3d.client.terrains.Terrain;
 import ru.reeson2003.my3d.client.textures.ModelTexture;
 import ru.reeson2003.my3d.client.textures.TerrainTexture;
@@ -44,11 +42,9 @@ public class MainGameLoop {
             Loader loader = new Loader();
 
             List<Entity> entities = generateEntities(loader);
-            RawModel model = OBJLoader.loadModel("models/tree/tree.obj", loader);
-            TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/tree/tree.png")));
-            Entity controlable = new StaticEntity(staticModel, new Vector3f(200, 0, 200), 0, 0, 0, 15);
-            Control entityControl = new FreeKeyboardMouseControl(1f, new Vector3f(100, 0, 100), new Vector3f(0, 0, 0), ticker);
-            entities.add(new ControlableEntity(controlable, entityControl));
+//            Entity controlable = loadPlayer(loader);
+//            Control entityControl = new RestFlatControl(10L, 1f, new Vector3f(100, 0, 100), new Vector3f(0, 0, 0), ticker);
+//            entities.add(new ControlableEntity(controlable, entityControl));
 
             TerrainTexturePack texturePack = getTexturePack(loader);
             TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("textures/blendMap.png"));
@@ -56,17 +52,21 @@ public class MainGameLoop {
 
             Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
 //            Terrain terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
-            CameraControl cameraControl = new CameraControl(entityControl);
+//            CameraControl cameraControl = new CameraControl(entityControl);
 //            Camera camera = new ControlledCamera(CAMERA_SPEED, new Vector3f(0, 10, 0), new Vector3f(125, 0, 0), cameraControl);
             Camera camera = new StaticCamera(new Vector3f(0, 100, 0), 130, 20, 0);
 
             MasterRenderer renderer = new MasterRenderer();
 
+            entities.add(loadPlayer(loader));
+            int index = entities.size() - 1;
+
             while (!Display.isCloseRequested()) {
                 ticker.tick();
 
                 renderer.processTerrain(terrain);
-//                renderer.processTerrain(terrain2);
+                Geometry g = getGeometry(10L);
+                entities.get(index).getPosition().set(g.getPosX() + 5, g.getPosY(), g.getPosZ());
                 for (Entity entity : entities) {
                     renderer.processEntity(entity);
                 }
@@ -84,8 +84,8 @@ public class MainGameLoop {
 
     private static List<Entity> generateEntities(Loader loader) {
         List<Entity> entities = new ArrayList<>();
-        ResLoader resLoader = new ResLoader();
-        Map<Long, List<Geometry>> geometries = resLoader.loadTerrainObjects();
+        RestLoader restLoader = new RestLoader();
+        Map<Long, List<Geometry>> geometries = restLoader.loadTerrainObjects();
         RawModel model = OBJLoader.loadModel("models/lowPolyTree/lowPolyTree.obj", loader);
         TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/lowPolyTree/lowPolyTree.png")));
         List<Geometry> geometryList = geometries.get(1L);
@@ -134,5 +134,15 @@ public class MainGameLoop {
         TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("textures/grassFlowers.png"));
         TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("textures/path.png"));
         return new TerrainTexturePack(background, rTexture, gTexture, bTexture);
+    }
+
+    private static Entity loadPlayer(Loader loader) {
+        RawModel model = OBJLoader.loadModel("models/player/person.obj", loader);
+        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/player/playerTexture.png")));
+        return new StaticEntity(staticModel, new Vector3f(0, 0, 0), 0, 0, 0, 1);
+    }
+
+    private static Geometry getGeometry(Long id) {
+        return new RestLoader().loadEntityObjects().get(id);
     }
 }
