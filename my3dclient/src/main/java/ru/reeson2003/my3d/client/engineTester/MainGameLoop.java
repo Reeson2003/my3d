@@ -37,14 +37,14 @@ public class MainGameLoop {
 
     public static void main(String[] args) {
         try {
-            Ticker ticker = new TickerImpl(20);
+            Ticker ticker = new TickerImpl(1000);
             DisplayManager.createDisplay(WIDTH, HEIGHT, FPS, TITLE);
             Loader loader = new Loader();
 
             List<Entity> entities = generateEntities(loader);
-//            Entity controlable = loadPlayer(loader);
-//            Control entityControl = new RestFlatControl(10L, 1f, new Vector3f(100, 0, 100), new Vector3f(0, 0, 0), ticker);
-//            entities.add(new ControlableEntity(controlable, entityControl));
+            Entity controlable = loadPlayer(loader);
+            Control entityControl = new RestFlatControl(10L, 1f, new Vector3f(100, 0, 100), new Vector3f(0, 0, 0), ticker);
+            entities.add(new ControlableEntity(controlable, entityControl));
 
             TerrainTexturePack texturePack = getTexturePack(loader);
             TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("textures/blendMap.png"));
@@ -65,8 +65,8 @@ public class MainGameLoop {
                 ticker.tick();
 
                 renderer.processTerrain(terrain);
-                Geometry g = getGeometry(10L);
-                entities.get(index).getPosition().set(g.getPosX() + 5, g.getPosY(), g.getPosZ());
+//                Geometry g = getGeometry(10L);
+//                entities.get(index).getPosition().set(g.getPosX() + 5, g.getPosY(), g.getPosZ());
                 for (Entity entity : entities) {
                     renderer.processEntity(entity);
                 }
