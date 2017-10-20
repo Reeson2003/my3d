@@ -1,6 +1,8 @@
 package ru.reeson2003.my3d.common;
 
 import org.junit.Test;
+import ru.reeson2003.my3d.common.loader.BaseLoaderFactory;
+import ru.reeson2003.my3d.common.loader.internal.InternalLoaderFactory;
 
 import java.io.IOException;
 
@@ -10,6 +12,7 @@ import java.io.IOException;
 public class TerrainGeometriesTest {
     @Test
     public void terrainGeometriesTest() throws IOException {
-        TerrainObjectGeometriesImpl.getInstance();
+        BaseLoaderFactory.setFactory(new InternalLoaderFactory());
+        TerrainObjectGeometries.getInstance().values().forEach(i-> System.out.println(i.get(0)));
     }
 }

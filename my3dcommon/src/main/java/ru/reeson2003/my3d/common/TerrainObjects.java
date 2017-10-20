@@ -1,8 +1,9 @@
 package ru.reeson2003.my3d.common;
 
+import ru.reeson2003.my3d.common.loader.BaseLoaderFactory;
+
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Properties;
 
 /**
  * Created by Pavel Gavrilov on 20.10.2017.
@@ -13,18 +14,10 @@ public class TerrainObjects extends HashMap<String, Long> {
 
     static {
         instance = new TerrainObjects();
-        Properties properties = new Properties();
         try {
-            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("terrainObjectNames.properties"));
-            for (Entry<Object, Object> entry : properties.entrySet()) {
-                String key = (String) entry.getKey();
-                Long value = Long.parseLong((String) entry.getValue());
-                if (instance.containsValue(value)) {
-                    throw new Exception("Duplicate object id [" + value + "]");
-                }
-                instance.put(key, value);
-            }
-        } catch (Exception e) {
+            instance.putAll(BaseLoaderFactory.getTerrainObjectLoader().load());
+        } catch (IOException e) {
+            e.printStackTrace();
             exception = e;
             instance = null;
         }

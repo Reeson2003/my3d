@@ -12,13 +12,14 @@ public class Geometry {
     private float rotZ;
     private float scale;
 
-    public Geometry(float posX, float posY, float posZ, float rotX, float rotY, float rotZ) {
+    public Geometry(float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float scale) {
         this.posX = posX;
         this.posY = posY;
         this.posZ = posZ;
         this.rotX = rotX;
         this.rotY = rotY;
         this.rotZ = rotZ;
+        this.scale = scale;
     }
 
     public float getPosX() {
@@ -47,5 +48,18 @@ public class Geometry {
 
     public float getScale() {
         return scale;
+    }
+
+    @Override
+    public String toString() {
+        return "Geometry{" +
+                "posX=" + posX +
+                ", posY=" + posY +
+                ", posZ=" + posZ +
+                ", rotX=" + rotX +
+                ", rotY=" + rotY +
+                ", rotZ=" + rotZ +
+                ", scale=" + scale +
+                '}';
     }
 }
