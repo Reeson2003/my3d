@@ -8,34 +8,46 @@ import java.util.Properties;
  * Created by Pavel Gavrilov on 20.10.2017.
  */
 public class TerrainObjects extends HashMap<String, Long> {
-    private static TerrainObjects instance = new TerrainObjects();
+    private static TerrainObjects instance;
+    private static Exception exception;
 
-    private TerrainObjects() {
+    static {
+        instance = new TerrainObjects();
         Properties properties = new Properties();
         try {
-            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("terrainObjects.properties"));
+            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("terrainObjectNames.properties"));
             for (Entry<Object, Object> entry : properties.entrySet()) {
                 String key = (String) entry.getKey();
                 Long value = Long.parseLong((String) entry.getValue());
-                this.put(key, value);
+                if (instance.containsValue(value)) {
+                    throw new Exception("Duplicate object id [" + value + "]");
+                }
+                instance.put(key, value);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            exception = e;
             instance = null;
         }
     }
 
+    private TerrainObjects() {
+    }
+
     public static TerrainObjects getInstance() throws IOException {
         if (instance == null)
-            throw new IOException("Can not load 'terrainObjects.properties");
+            throw new IOException("Can not load 'terrainObjectNames.properties", exception);
         return instance;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("TerrainObjects{\n");
+        StringBuilder sb = new StringBuilder("TerrainObjects {\n");
         for (Entry<String, Long> entry : instance.entrySet()) {
-            sb.append(entry.getKey() + ": " + entry.getValue() + "\n");
+            sb.append("\t")
+                    .append(entry.getKey())
+                    .append(": ")
+                    .append(entry.getValue())
+                    .append("\n");
         }
         sb.append("}");
         return sb.toString();

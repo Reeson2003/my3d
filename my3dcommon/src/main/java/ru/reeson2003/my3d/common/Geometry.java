@@ -3,15 +3,16 @@ package ru.reeson2003.my3d.common;
 /**
  * Created by Pavel Gavrilov on 20.10.2017.
  */
-public class Position {
+public class Geometry {
     private float posX;
     private float posY;
     private float posZ;
     private float rotX;
     private float rotY;
     private float rotZ;
+    private float scale;
 
-    public Position(float posX, float posY, float posZ, float rotX, float rotY, float rotZ) {
+    public Geometry(float posX, float posY, float posZ, float rotX, float rotY, float rotZ) {
         this.posX = posX;
         this.posY = posY;
         this.posZ = posZ;
@@ -42,5 +43,9 @@ public class Position {
 
     public float getRotZ() {
         return rotZ;
+    }
+
+    public float getScale() {
+        return scale;
     }
 }

@@ -1,0 +1,1 @@
+<object id>,<posX>,<posY>,<posZ>,<rotX>,<rotY>,<rotZ>
