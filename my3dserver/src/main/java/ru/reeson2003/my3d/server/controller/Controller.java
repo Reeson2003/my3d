@@ -49,4 +49,10 @@ public class Controller {
         LOGGER.info("Registered entity id: [" + result + "]");
         return result;
     }
+
+    @RequestMapping(value = "/entity", method = RequestMethod.DELETE)
+    void deleteEntity(@RequestParam long id) {
+        LOGGER.info("Deleting entity id: [" + id + "]");
+        EntityManagerImpl.getInstance().removeEntity(id);
+    }
 }

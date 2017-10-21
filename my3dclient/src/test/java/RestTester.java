@@ -9,7 +9,7 @@ import java.util.Map;
 public class RestTester {
     public static void main(String[] args) {
         Geometry geometry = new Geometry(1,2,3,4,5,6,7);
-        RestLoader loader = new RestLoader("http://localhost:8080");
+        RestLoader loader = new RestLoader("http://192.168.1.50:8080");
         long id = loader.registerEntity(geometry);
         Map<Long, Geometry> longGeometryMap = loader.loadEntityObjects();
         System.out.println(longGeometryMap);

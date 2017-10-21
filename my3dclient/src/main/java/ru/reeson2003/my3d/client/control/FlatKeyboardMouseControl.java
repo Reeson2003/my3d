@@ -45,12 +45,12 @@ public class FlatKeyboardMouseControl implements Control, TickerListener {
             position.z += speed * (Math.cos(Math.toRadians(yawPitchRoll.getX()) - Math.PI / 2d));
             position.x -= speed * (Math.sin(Math.toRadians(yawPitchRoll.getX()) - Math.PI / 2d));
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-            position.y += speed;
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
-            position.y -= speed;
-        }
+//        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+//            position.y += speed;
+//        }
+//        if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+//            position.y -= speed;
+//        }
         if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
             yawPitchRoll.x += speed;
         }

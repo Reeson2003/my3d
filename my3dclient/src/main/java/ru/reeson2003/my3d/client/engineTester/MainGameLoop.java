@@ -35,23 +35,24 @@ public class MainGameLoop {
     public static final String TITLE = "AWESOME";
     public static final float CAMERA_SPEED = 0.5f;
 
-    public static final String SERVER_URL = "http://localhost:8080";
+    public static final String SERVER_URL = "http://192.168.1.50:8080";
 
 
     public static void main(String[] args) {
+        RestLoader restLoader = new RestLoader(SERVER_URL);
+        Vector3f playerPosition = new Vector3f(100, 0, 100);
+        Vector3f playerYapPitchRoll = new Vector3f(0, 0, 0);
+        float playerScale = 1f;
+        long playerId = restLoader.registerEntity(new Geometry(playerPosition.x, playerPosition.y, playerPosition.z,
+                playerYapPitchRoll.x, playerYapPitchRoll.y, playerYapPitchRoll.z,playerScale));
         try {
             Ticker ticker = new TickerImpl(20);
             DisplayManager.createDisplay(WIDTH, HEIGHT, FPS, TITLE);
             Loader loader = new Loader();
-            RestLoader restLoader = new RestLoader(SERVER_URL);
 
             List<Entity> entities = generateEntities(loader);
 //            Entity controlled = loadPlayer(loader);
-            Vector3f playerPosition = new Vector3f(100, 0, 100);
-            Vector3f playerYapPitchRoll = new Vector3f(0, 0, 0);
-            float playerScale = 1f;
-            long playerId = restLoader.registerEntity(new Geometry(playerPosition.x, playerPosition.y, playerPosition.z,
-                    playerYapPitchRoll.x, playerYapPitchRoll.y, playerYapPitchRoll.z,playerScale));
+
             Control entityControl = new RestFlatControl(SERVER_URL, playerId, 1f, playerPosition, playerYapPitchRoll, ticker);
 
             TerrainTexturePack texturePack = getTexturePack(loader);
@@ -82,6 +83,8 @@ public class MainGameLoop {
             DisplayManager.closeDisplay();
         } catch (LWJGLException e) {
             e.printStackTrace();
+        } finally {
+            restLoader.deleteEntity(playerId);
         }
     }
 
@@ -154,7 +157,7 @@ public class MainGameLoop {
         Map<Long, Entity> result = new HashMap<>(entityGeometries.size());
         for (Map.Entry<Long, Geometry> entry : entityGeometries.entrySet()) {
             Geometry g = entry.getValue();
-            Entity entity = new StaticEntity(model, new Vector3f(g.getPosX(),g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(),g.getScale());
+            Entity entity = new StaticEntity(model, new Vector3f(g.getPosX(),g.getPosY(), g.getPosZ()), 0, 0, 0,g.getScale());
             result.put(entry.getKey(), entity);
         }
         return result;

@@ -53,4 +53,8 @@ public class RestLoader {
         return restTemplate.exchange(url + "/id", HttpMethod.PUT, entity, Long.class).getBody();
     }
 
+    public void deleteEntity(long id) {
+        String url = URL;
+        restTemplate.delete(url + "/entity?id=" + id);
+    }
 }
