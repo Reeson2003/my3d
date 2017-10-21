@@ -157,7 +157,7 @@ public class MainGameLoop {
         Map<Long, Entity> result = new HashMap<>(entityGeometries.size());
         for (Map.Entry<Long, Geometry> entry : entityGeometries.entrySet()) {
             Geometry g = entry.getValue();
-            Entity entity = new StaticEntity(model, new Vector3f(g.getPosX(),g.getPosY(), g.getPosZ()), 0, g.getRotY(), 0,g.getScale());
+            Entity entity = new StaticEntity(model, new Vector3f(g.getPosX(),g.getPosY(), g.getPosZ()), 0, g.getRotX(), 0,g.getScale());
             result.put(entry.getKey(), entity);
         }
         return result;
