@@ -9,11 +9,12 @@ import ru.reeson2003.my3d.common.Geometry;
  * Created by User on 20.10.2017.
  */
 public class RestFlatControl extends FlatKeyboardMouseControl {
-    private RestLoader loader = new RestLoader();
+    private RestLoader loader;
     private long id;
 
-    public RestFlatControl(long id, float speed, Vector3f position, Vector3f yawPitchRoll, Ticker ticker) {
+    public RestFlatControl(String serverUrl, long id, float speed, Vector3f position, Vector3f yawPitchRoll, Ticker ticker) {
         super(speed, position, yawPitchRoll, ticker);
+        loader = new RestLoader(serverUrl);
         this.id = id;
     }
 

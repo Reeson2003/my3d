@@ -8,11 +8,11 @@ import java.util.Map;
  */
 public class RestTester {
     public static void main(String[] args) {
-        long id = 10L;
         Geometry geometry = new Geometry(1,2,3,4,5,6,7);
-        RestLoader loader = new RestLoader();
-        loader.updateEntity(id, geometry);
+        RestLoader loader = new RestLoader("http://localhost:8080");
+        long id = loader.registerEntity(geometry);
         Map<Long, Geometry> longGeometryMap = loader.loadEntityObjects();
         System.out.println(longGeometryMap);
+//        loader.updateEntity(id, geometry);
     }
 }

@@ -13,4 +13,6 @@ public interface EntitiesManager {
     void updateEntity(long id, Geometry geometry);
 
     void removeEntity(long id);
+
+    long registerEntity(Geometry geometry);
 }

@@ -7,15 +7,14 @@ import ru.reeson2003.my3d.client.models.TexturedModel;
 /**
  * Created by Pavel Gavrilov on 18.10.2017.
  */
-public class ControlableEntity implements Entity{
+public class ControlledEntity implements Entity{
     private Entity origin;
     private Control control;
 
-    public ControlableEntity(Entity origin, Control control) {
+    public ControlledEntity(Entity origin, Control control) {
         this.origin = origin;
         this.control = control;
     }
-
 
     @Override
     public TexturedModel getModel() {
