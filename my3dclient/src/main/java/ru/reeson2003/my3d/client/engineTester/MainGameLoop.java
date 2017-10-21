@@ -21,6 +21,7 @@ import ru.reeson2003.my3d.client.ticker.TickerImpl;
 import ru.reeson2003.my3d.common.Geometry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,42 +35,44 @@ public class MainGameLoop {
     public static final String TITLE = "AWESOME";
     public static final float CAMERA_SPEED = 0.5f;
 
+    public static final String SERVER_URL = "http://localhost:8080";
+
 
     public static void main(String[] args) {
         try {
-            Ticker ticker = new TickerImpl(1000);
+            Ticker ticker = new TickerImpl(20);
             DisplayManager.createDisplay(WIDTH, HEIGHT, FPS, TITLE);
             Loader loader = new Loader();
+            RestLoader restLoader = new RestLoader(SERVER_URL);
 
             List<Entity> entities = generateEntities(loader);
-            Entity controlable = loadPlayer(loader);
-            Control entityControl = new RestFlatControl(10L, 1f, new Vector3f(100, 0, 100), new Vector3f(0, 0, 0), ticker);
-            entities.add(new ControlableEntity(controlable, entityControl));
+//            Entity controlled = loadPlayer(loader);
+            Vector3f playerPosition = new Vector3f(100, 0, 100);
+            Vector3f playerYapPitchRoll = new Vector3f(0, 0, 0);
+            float playerScale = 1f;
+            long playerId = restLoader.registerEntity(new Geometry(playerPosition.x, playerPosition.y, playerPosition.z,
+                    playerYapPitchRoll.x, playerYapPitchRoll.y, playerYapPitchRoll.z,playerScale));
+            Control entityControl = new RestFlatControl(SERVER_URL, playerId, 1f, playerPosition, playerYapPitchRoll, ticker);
 
             TerrainTexturePack texturePack = getTexturePack(loader);
             TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("textures/blendMap.png"));
             Light light = new Light(new Vector3f(-2000, 2000, 200), new Vector3f(0.9f, 0.9f, 0.9f));
 
             Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
-//            Terrain terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.loadTexture("textures/grass.png")));
-//            CameraControl cameraControl = new CameraControl(entityControl);
-//            Camera camera = new ControlledCamera(CAMERA_SPEED, new Vector3f(0, 10, 0), new Vector3f(125, 0, 0), cameraControl);
-            Camera camera = new StaticCamera(new Vector3f(0, 100, 0), 130, 20, 0);
+            CameraControl cameraControl = new CameraControl(entityControl);
+            Camera camera = new ControlledCamera(new Vector3f(0, 10, 0), cameraControl);
+//            Camera camera = new StaticCamera(new Vector3f(0, 100, 0), 130, 20, 0);
 
             MasterRenderer renderer = new MasterRenderer();
-
-            entities.add(loadPlayer(loader));
-            int index = entities.size() - 1;
-
+            TexturedModel playerModel = loadPlayer(loader);
             while (!Display.isCloseRequested()) {
                 ticker.tick();
 
                 renderer.processTerrain(terrain);
-//                Geometry g = getGeometry(10L);
-//                entities.get(index).getPosition().set(g.getPosX() + 5, g.getPosY(), g.getPosZ());
-                for (Entity entity : entities) {
-                    renderer.processEntity(entity);
-                }
+
+                entities.forEach(renderer::processEntity);
+                List<Entity> players = getEntitiesExcludeId(playerId, playerModel, restLoader);
+                players.forEach(renderer::processEntity);
                 renderer.render(light, camera);
                 DisplayManager.updateDisplay();
             }
@@ -84,7 +87,7 @@ public class MainGameLoop {
 
     private static List<Entity> generateEntities(Loader loader) {
         List<Entity> entities = new ArrayList<>();
-        RestLoader restLoader = new RestLoader();
+        RestLoader restLoader = new RestLoader(SERVER_URL);
         Map<Long, List<Geometry>> geometries = restLoader.loadTerrainObjects();
         RawModel model = OBJLoader.loadModel("models/lowPolyTree/lowPolyTree.obj", loader);
         TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/lowPolyTree/lowPolyTree.png")));
@@ -136,13 +139,30 @@ public class MainGameLoop {
         return new TerrainTexturePack(background, rTexture, gTexture, bTexture);
     }
 
-    private static Entity loadPlayer(Loader loader) {
+    private static TexturedModel loadPlayer(Loader loader) {
         RawModel model = OBJLoader.loadModel("models/player/person.obj", loader);
         TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/player/playerTexture.png")));
-        return new StaticEntity(staticModel, new Vector3f(0, 0, 0), 0, 0, 0, 1);
+        return staticModel;
     }
 
     private static Geometry getGeometry(Long id) {
-        return new RestLoader().loadEntityObjects().get(id);
+        return new RestLoader(SERVER_URL).loadEntityObjects().get(id);
+    }
+
+    private static Map<Long, Entity> getEntities(TexturedModel model, RestLoader loader) {
+        Map<Long, Geometry> entityGeometries = loader.loadEntityObjects();
+        Map<Long, Entity> result = new HashMap<>(entityGeometries.size());
+        for (Map.Entry<Long, Geometry> entry : entityGeometries.entrySet()) {
+            Geometry g = entry.getValue();
+            Entity entity = new StaticEntity(model, new Vector3f(g.getPosX(),g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(),g.getScale());
+            result.put(entry.getKey(), entity);
+        }
+        return result;
+    }
+
+    private static List<Entity> getEntitiesExcludeId(long id, TexturedModel model, RestLoader loader) {
+        Map<Long, Entity> entities = getEntities(model, loader);
+        entities.remove(id);
+        return new ArrayList<>(entities.values());
     }
 }

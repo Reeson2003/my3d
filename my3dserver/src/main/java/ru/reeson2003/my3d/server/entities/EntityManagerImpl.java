@@ -28,11 +28,19 @@ public class EntityManagerImpl implements EntitiesManager {
 
     @Override
     public void updateEntity(long id, Geometry geometry) {
-        entities.put(id, geometry);
+        if (entities.containsKey(id))
+            entities.put(id, geometry);
     }
 
     @Override
     public void removeEntity(long id) {
         entities.remove(id);
+    }
+
+    @Override
+    public synchronized long registerEntity(Geometry geometry) {
+        long result = entities.size();
+        entities.put(result, geometry);
+        return result;
     }
 }

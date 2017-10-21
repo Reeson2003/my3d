@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class TerrainLoaderTest {
     public static void main(String[] args) {
-        RestLoader loader = new RestLoader();
+        RestLoader loader = new RestLoader("http://localhost:8080");
         Map<Long, List<Geometry>> longListMap = loader.loadTerrainObjects();
         System.out.println(longListMap);
     }
