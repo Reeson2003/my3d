@@ -85,7 +85,7 @@ public class TerrainShader extends ShaderProgram {
         super.loadVector(location_lightColour, light.getColour());
     }
 
-    public void loadShineVariaables(float damper, float reflectivity) {
+    public void loadShineVariables(float damper, float reflectivity) {
         super.loadFloat(location_shineDamper, damper);
         super.loadFloat(location_reflectivity, reflectivity);
     }

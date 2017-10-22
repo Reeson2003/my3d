@@ -52,9 +52,14 @@ public class MainGameLoop {
 
             List<Entity> entities = generateEntities(loader);
 //            Entity controlled = loadPlayer(loader);
+            RawModel model = OBJLoader.loadModel("models/arc/arc.obj", loader);
+            TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/arc/arc.png")));
+            Entity entity = new StaticEntity(staticModel, new Vector3f(10, 0 , 10),0,0,0,0.1f);
+            entities.add(entity);
 
-            Control entityControl = new RestFlatControl(SERVER_URL, playerId, 1f, playerPosition, playerYapPitchRoll, ticker);
+//            Control entityControl = new RestFlatControl(SERVER_URL, playerId, 1f, playerPosition, playerYapPitchRoll, ticker);
 
+            Control entityControl = new FreeKeyboardMouseControl(1, new Vector3f(0,10,0), new Vector3f(0,0,0), ticker);
             TerrainTexturePack texturePack = getTexturePack(loader);
             TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("textures/blendMap.png"));
             Light light = new Light(new Vector3f(-2000, 2000, 200), new Vector3f(0.9f, 0.9f, 0.9f));
@@ -99,8 +104,8 @@ public class MainGameLoop {
             Geometry g = geometryList.get(i);
             entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
-        model = OBJLoader.loadModel("models/tree/tree.obj", loader);
-        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/tree/tree.png")));
+        model = OBJLoader.loadModel("models/palm/palm1.obj", loader);
+        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/palm/palm.png")));
         geometryList = geometries.get(2L);
         for (int i = 0; i < geometryList.size(); i++) {
             Geometry g = geometryList.get(i);
