@@ -53,13 +53,13 @@ public class MainGameLoop {
 //            List<Entity> entities = generateEntities(loader);
 //            Entity controlled = loadPlayer(loader);
             List<Entity> entities = new ArrayList<>();
-            RawModel model = OBJLoader.loadModel("models/test/vase.obj", loader);
+            RawModel model = OBJLoader.loadModel("models/arc/arc.obj", loader);
             ModelTexture texture = new ModelTexture(loader.loadTexture("textures/gray.png"));
             texture.setHasTransparency(false);
             texture.setReflectivity(0.5f);
             texture.setShineDamper(50);
             TexturedModel staticModel = new TexturedModel(model, texture);
-            Entity entity = new StaticEntity(staticModel, new Vector3f(100, 0 , 100),0,0,0,10f);
+            Entity entity = new StaticEntity(staticModel, new Vector3f(100, 50 , 100),0,0,0,0.1f);
             entities.add(entity);
 
 //            Control entityControl = new RestFlatControl(SERVER_URL, playerId, 1f, playerPosition, playerYapPitchRoll, ticker);

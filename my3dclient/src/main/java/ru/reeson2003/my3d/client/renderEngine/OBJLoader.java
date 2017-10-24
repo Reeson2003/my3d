@@ -32,13 +32,20 @@ public class OBJLoader {
         int[] indicesArray = null;
         try {
 
+            int lineNumber = 0;
             while (true) {
+                lineNumber++;
                 line = reader.readLine();
+                line = line.replaceAll("  ", " ");
                 String[] currentLine = line.split(" ");
                 if (line.startsWith("v ")) {
-                    Vector3f vertex = new Vector3f(Float.parseFloat(currentLine[1]),
-                            Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
-                    vertices.add(vertex);
+                    try {
+                        Vector3f vertex = new Vector3f(Float.parseFloat(currentLine[1]),
+                                Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
+                        vertices.add(vertex);
+                    } catch (NumberFormatException e) {
+                        throw new NumberFormatException(e.getLocalizedMessage() + ", line number [" + lineNumber +"], text [" + line + "]");
+                    }
                 } else if (line.startsWith("vt ")) {
                     Vector2f texture = new Vector2f(Float.parseFloat(currentLine[1]),
                             Float.parseFloat(currentLine[2]));
@@ -101,6 +108,9 @@ public class OBJLoader {
         try {
             currentTex = textures.get(Integer.parseInt(vertexData[1]) - 1);
         } catch (NumberFormatException ignore) {
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         textureArray[currentVertexPointer * 2] = currentTex.x;
         textureArray[currentVertexPointer * 2 + 1] = 1 - currentTex.y;
