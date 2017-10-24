@@ -3,7 +3,9 @@ package ru.reeson2003.my3d.client.engineTester;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
-import ru.reeson2003.my3d.client.control.*;
+import ru.reeson2003.my3d.client.control.CameraControl;
+import ru.reeson2003.my3d.client.control.Control;
+import ru.reeson2003.my3d.client.control.FreeKeyboardMouseControl;
 import ru.reeson2003.my3d.client.entities.*;
 import ru.reeson2003.my3d.client.models.RawModel;
 import ru.reeson2003.my3d.client.models.TexturedModel;
@@ -11,19 +13,17 @@ import ru.reeson2003.my3d.client.renderEngine.DisplayManager;
 import ru.reeson2003.my3d.client.renderEngine.Loader;
 import ru.reeson2003.my3d.client.renderEngine.MasterRenderer;
 import ru.reeson2003.my3d.client.renderEngine.OBJLoader;
-//import ru.reeson2003.my3d.transport.rest.RestLoader;
 import ru.reeson2003.my3d.client.terrains.Terrain;
 import ru.reeson2003.my3d.client.textures.ModelTexture;
 import ru.reeson2003.my3d.client.textures.TerrainTexture;
 import ru.reeson2003.my3d.client.textures.TerrainTexturePack;
 import ru.reeson2003.my3d.client.ticker.Ticker;
 import ru.reeson2003.my3d.client.ticker.TickerImpl;
-import ru.reeson2003.my3d.common.Geometry;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+//import ru.reeson2003.my3d.transport.rest.RestLoader;
 
 /**
  * Created by Pavel Gavrilov on 12.10.2017.
@@ -53,7 +53,7 @@ public class MainGameLoop {
 //            List<Entity> entities = generateEntities(loader);
 //            Entity controlled = loadPlayer(loader);
             List<Entity> entities = new ArrayList<>();
-            RawModel model = OBJLoader.loadModel("models/arc/arc.obj", loader);
+            RawModel model = OBJLoader.loadModel("models/arc/owkg2.obj", loader);
             ModelTexture texture = new ModelTexture(loader.loadTexture(ModelTexture.GRAY));
             texture.setHasTransparency(false);
             texture.setReflectivity(50f);
