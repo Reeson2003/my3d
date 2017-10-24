@@ -11,7 +11,7 @@ import ru.reeson2003.my3d.client.renderEngine.DisplayManager;
 import ru.reeson2003.my3d.client.renderEngine.Loader;
 import ru.reeson2003.my3d.client.renderEngine.MasterRenderer;
 import ru.reeson2003.my3d.client.renderEngine.OBJLoader;
-import ru.reeson2003.my3d.client.rest.RestLoader;
+//import ru.reeson2003.my3d.transport.rest.RestLoader;
 import ru.reeson2003.my3d.client.terrains.Terrain;
 import ru.reeson2003.my3d.client.textures.ModelTexture;
 import ru.reeson2003.my3d.client.textures.TerrainTexture;
@@ -39,27 +39,28 @@ public class MainGameLoop {
 
 
     public static void main(String[] args) {
-        RestLoader restLoader = new RestLoader(SERVER_URL);
+//        RestLoader restLoader = new RestLoader(SERVER_URL);
         Vector3f playerPosition = new Vector3f(100, 0, 100);
         Vector3f playerYapPitchRoll = new Vector3f(0, 0, 0);
         float playerScale = 1f;
-        long playerId = restLoader.registerEntity(new Geometry(playerPosition.x, playerPosition.y, playerPosition.z,
-                playerYapPitchRoll.x, playerYapPitchRoll.y, playerYapPitchRoll.z,playerScale));
+//        long playerId = restLoader.registerEntity(new Geometry(playerPosition.x, playerPosition.y, playerPosition.z,
+//                playerYapPitchRoll.x, playerYapPitchRoll.y, playerYapPitchRoll.z,playerScale));
         try {
             Ticker ticker = new TickerImpl(20);
             DisplayManager.createDisplay(WIDTH, HEIGHT, FPS, TITLE);
             Loader loader = new Loader();
 
-            List<Entity> entities = generateEntities(loader);
+//            List<Entity> entities = generateEntities(loader);
 //            Entity controlled = loadPlayer(loader);
-            RawModel model = OBJLoader.loadModel("models/arc/arc.obj", loader);
-            TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/arc/arc.png")));
+            List<Entity> entities = new ArrayList<>();
+            RawModel model = OBJLoader.loadModel("models/drone/drone.obj", loader);
+            TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("textures/gray.png")));
             Entity entity = new StaticEntity(staticModel, new Vector3f(10, 0 , 10),0,0,0,0.1f);
             entities.add(entity);
 
 //            Control entityControl = new RestFlatControl(SERVER_URL, playerId, 1f, playerPosition, playerYapPitchRoll, ticker);
 
-            Control entityControl = new FreeKeyboardMouseControl(1, new Vector3f(0,10,0), new Vector3f(0,0,0), ticker);
+            Control entityControl = new FreeKeyboardMouseControl(1, new Vector3f(0,10,0), new Vector3f(180,0,0), ticker);
             TerrainTexturePack texturePack = getTexturePack(loader);
             TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("textures/blendMap.png"));
             Light light = new Light(new Vector3f(-2000, 2000, 200), new Vector3f(0.9f, 0.9f, 0.9f));
@@ -77,8 +78,8 @@ public class MainGameLoop {
                 renderer.processTerrain(terrain);
 
                 entities.forEach(renderer::processEntity);
-                List<Entity> players = getEntitiesExcludeId(playerId, playerModel, restLoader);
-                players.forEach(renderer::processEntity);
+//                List<Entity> players = getEntitiesExcludeId(playerId, playerModel, restLoader);
+//                players.forEach(renderer::processEntity);
                 renderer.render(light, camera);
                 DisplayManager.updateDisplay();
             }
@@ -89,55 +90,55 @@ public class MainGameLoop {
         } catch (LWJGLException e) {
             e.printStackTrace();
         } finally {
-            restLoader.deleteEntity(playerId);
+//            restLoader.deleteEntity(playerId);
         }
     }
 
-    private static List<Entity> generateEntities(Loader loader) {
-        List<Entity> entities = new ArrayList<>();
-        RestLoader restLoader = new RestLoader(SERVER_URL);
-        Map<Long, List<Geometry>> geometries = restLoader.loadTerrainObjects();
-        RawModel model = OBJLoader.loadModel("models/lowPolyTree/lowPolyTree.obj", loader);
-        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/lowPolyTree/lowPolyTree.png")));
-        List<Geometry> geometryList = geometries.get(1L);
-        for (int i = 0; i < geometryList.size(); i++) {
-            Geometry g = geometryList.get(i);
-            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
-        }
-        model = OBJLoader.loadModel("models/palm/palm1.obj", loader);
-        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/palm/palm.png")));
-        geometryList = geometries.get(2L);
-        for (int i = 0; i < geometryList.size(); i++) {
-            Geometry g = geometryList.get(i);
-            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
-        }
-        model = OBJLoader.loadModel("models/grass/grassModel.obj", loader);
-        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/grassTexture.png")));
-        staticModel.getTexture().setHasTransparency(true);
-        staticModel.getTexture().setUseFakeLighting(true);
-        geometryList = geometries.get(3L);
-        for (int i = 0; i < geometryList.size(); i++) {
-            Geometry g = geometryList.get(i);
-            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
-        }
-        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/flower.png")));
-        staticModel.getTexture().setHasTransparency(true);
-        staticModel.getTexture().setUseFakeLighting(true);
-        geometryList = geometries.get(4L);
-        for (int i = 0; i < geometryList.size(); i++) {
-            Geometry g = geometryList.get(i);
-            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
-        }
-        model = OBJLoader.loadModel("models/fern/fern.obj", loader);
-        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/fern/fern.png")));
-        staticModel.getTexture().setHasTransparency(true);
-        geometryList = geometries.get(5L);
-        for (int i = 0; i < geometryList.size(); i++) {
-            Geometry g = geometryList.get(i);
-            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
-        }
-        return entities;
-    }
+//    private static List<Entity> generateEntities(Loader loader) {
+//        List<Entity> entities = new ArrayList<>();
+//        RestLoader restLoader = new RestLoader(SERVER_URL);
+//        Map<Long, List<Geometry>> geometries = restLoader.loadTerrainObjects();
+//        RawModel model = OBJLoader.loadModel("models/lowPolyTree/lowPolyTree.obj", loader);
+//        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/lowPolyTree/lowPolyTree.png")));
+//        List<Geometry> geometryList = geometries.get(1L);
+//        for (int i = 0; i < geometryList.size(); i++) {
+//            Geometry g = geometryList.get(i);
+//            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
+//        }
+//        model = OBJLoader.loadModel("models/palm/palm1.obj", loader);
+//        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/palm/palm.png")));
+//        geometryList = geometries.get(2L);
+//        for (int i = 0; i < geometryList.size(); i++) {
+//            Geometry g = geometryList.get(i);
+//            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
+//        }
+//        model = OBJLoader.loadModel("models/grass/grassModel.obj", loader);
+//        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/grassTexture.png")));
+//        staticModel.getTexture().setHasTransparency(true);
+//        staticModel.getTexture().setUseFakeLighting(true);
+//        geometryList = geometries.get(3L);
+//        for (int i = 0; i < geometryList.size(); i++) {
+//            Geometry g = geometryList.get(i);
+//            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
+//        }
+//        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/flower.png")));
+//        staticModel.getTexture().setHasTransparency(true);
+//        staticModel.getTexture().setUseFakeLighting(true);
+//        geometryList = geometries.get(4L);
+//        for (int i = 0; i < geometryList.size(); i++) {
+//            Geometry g = geometryList.get(i);
+//            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
+//        }
+//        model = OBJLoader.loadModel("models/fern/fern.obj", loader);
+//        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/fern/fern.png")));
+//        staticModel.getTexture().setHasTransparency(true);
+//        geometryList = geometries.get(5L);
+//        for (int i = 0; i < geometryList.size(); i++) {
+//            Geometry g = geometryList.get(i);
+//            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
+//        }
+//        return entities;
+//    }
 
     private static TerrainTexturePack getTexturePack(Loader loader) {
         TerrainTexture background = new TerrainTexture(loader.loadTexture("textures/grassy2.png"));
@@ -153,24 +154,24 @@ public class MainGameLoop {
         return staticModel;
     }
 
-    private static Geometry getGeometry(Long id) {
-        return new RestLoader(SERVER_URL).loadEntityObjects().get(id);
-    }
+//    private static Geometry getGeometry(Long id) {
+//        return new RestLoader(SERVER_URL).loadEntityObjects().get(id);
+//    }
 
-    private static Map<Long, Entity> getEntities(TexturedModel model, RestLoader loader) {
-        Map<Long, Geometry> entityGeometries = loader.loadEntityObjects();
-        Map<Long, Entity> result = new HashMap<>(entityGeometries.size());
-        for (Map.Entry<Long, Geometry> entry : entityGeometries.entrySet()) {
-            Geometry g = entry.getValue();
-            Entity entity = new StaticEntity(model, new Vector3f(g.getPosX(),g.getPosY(), g.getPosZ()), 0, g.getRotX(), 0,g.getScale());
-            result.put(entry.getKey(), entity);
-        }
-        return result;
-    }
+//    private static Map<Long, Entity> getEntities(TexturedModel model, RestLoader loader) {
+//        Map<Long, Geometry> entityGeometries = loader.loadEntityObjects();
+//        Map<Long, Entity> result = new HashMap<>(entityGeometries.size());
+//        for (Map.Entry<Long, Geometry> entry : entityGeometries.entrySet()) {
+//            Geometry g = entry.getValue();
+//            Entity entity = new StaticEntity(model, new Vector3f(g.getPosX(),g.getPosY(), g.getPosZ()), 0, g.getRotX(), 0,g.getScale());
+//            result.put(entry.getKey(), entity);
+//        }
+//        return result;
+//    }
 
-    private static List<Entity> getEntitiesExcludeId(long id, TexturedModel model, RestLoader loader) {
-        Map<Long, Entity> entities = getEntities(model, loader);
-        entities.remove(id);
-        return new ArrayList<>(entities.values());
-    }
+//    private static List<Entity> getEntitiesExcludeId(long id, TexturedModel model, RestLoader loader) {
+//        Map<Long, Entity> entities = getEntities(model, loader);
+//        entities.remove(id);
+//        return new ArrayList<>(entities.values());
+//    }
 }

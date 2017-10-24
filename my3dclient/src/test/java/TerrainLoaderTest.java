@@ -1,4 +1,4 @@
-import ru.reeson2003.my3d.client.rest.RestLoader;
+import ru.reeson2003.my3d.transport.rest.RestLoader;
 import ru.reeson2003.my3d.common.Geometry;
 
 import java.util.List;

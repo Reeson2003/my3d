@@ -13,6 +13,7 @@
         <module>my3dserver</module>
         <module>my3dclient</module>
         <module>my3dcommon</module>
+        <module>my3dtransport</module>
     </modules>
 
     <properties>
