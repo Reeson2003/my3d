@@ -1,2 +1,3 @@
 - Run maven install
 - Set up vm options: -Djava.library.path=my3dclient/target/natives
+- Решение проблемы с разверткой для Blendera заходим в редактирование(Tab), выделяем все точки (A)(либо нажимаем B множественное выделение и выделяем нужные вершины) - нажимаем (U) - выбираем там Smart UV Project - Ok или Cube Projection. Для Max существует модификатор Normal
