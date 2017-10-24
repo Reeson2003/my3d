@@ -53,8 +53,8 @@ public class MainGameLoop {
 //            List<Entity> entities = generateEntities(loader);
 //            Entity controlled = loadPlayer(loader);
             List<Entity> entities = new ArrayList<>();
-            RawModel model = OBJLoader.loadModel("models/palm/palm.obj", loader);
-            ModelTexture texture = new ModelTexture(loader.loadTexture("models/palm/palm.png"));
+            RawModel model = OBJLoader.loadModel("models/arc/arc.obj", loader);
+            ModelTexture texture = new ModelTexture(loader.loadTexture(ModelTexture.GRAY));
             texture.setHasTransparency(false);
             texture.setReflectivity(50f);
             texture.setShineDamper(50);
