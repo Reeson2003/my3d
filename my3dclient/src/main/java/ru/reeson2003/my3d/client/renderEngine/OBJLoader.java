@@ -2,6 +2,8 @@ package ru.reeson2003.my3d.client.renderEngine;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.reeson2003.my3d.client.models.RawModel;
 
 import java.io.*;
@@ -12,6 +14,8 @@ import java.util.List;
  * Created by Toshiba on 15.10.2017.
  */
 public class OBJLoader {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(OBJLoader.class);
 
     public static RawModel loadModel(String fileName, Loader loader) {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
@@ -93,7 +97,11 @@ public class OBJLoader {
                                       float[] normalsArray) {
         int currentVertexPointer = Integer.parseInt(vertexData[0]) - 1;
         indices.add(currentVertexPointer);
-        Vector2f currentTex = textures.get(Integer.parseInt(vertexData[1]) - 1);
+        Vector2f currentTex = new Vector2f(0,0);
+        try {
+            currentTex = textures.get(Integer.parseInt(vertexData[1]) - 1);
+        } catch (NumberFormatException ignore) {
+        }
         textureArray[currentVertexPointer * 2] = currentTex.x;
         textureArray[currentVertexPointer * 2 + 1] = 1 - currentTex.y;
         Vector3f currentNorm = normals.get(Integer.parseInt(vertexData[2]) - 1);
