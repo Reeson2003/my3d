@@ -32,20 +32,44 @@ public class OBJLoader {
         int[] indicesArray = null;
         try {
 
+            int lineNumber = 0;
             while (true) {
+                lineNumber++;
                 line = reader.readLine();
+                line = line.replaceAll("  ", " ");
                 String[] currentLine = line.split(" ");
                 if (line.startsWith("v ")) {
-                    Vector3f vertex = new Vector3f(Float.parseFloat(currentLine[1]),
-                            Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
+                    Vector3f vertex = new Vector3f(0,0,0);
+                    try {
+                        vertex = new Vector3f(Float.parseFloat(currentLine[1]),
+                                Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
+                    } catch (NumberFormatException e) {
+                        LOGGER.debug(e.getLocalizedMessage() + "line number: " + lineNumber + ", line '" + line + "'");
+                    } catch (Exception e) {
+                        LOGGER.error(e.getLocalizedMessage() + "line number: " + lineNumber + ", line '" + line + "'", e);
+                    }
                     vertices.add(vertex);
                 } else if (line.startsWith("vt ")) {
-                    Vector2f texture = new Vector2f(Float.parseFloat(currentLine[1]),
-                            Float.parseFloat(currentLine[2]));
+                    Vector2f texture = new Vector2f(0,0);
+                    try {
+                        texture = new Vector2f(Float.parseFloat(currentLine[1]),
+                                Float.parseFloat(currentLine[2]));
+                    } catch (NumberFormatException e) {
+                        LOGGER.debug(e.getLocalizedMessage() + "line number: " + lineNumber + ", line '" + line + "'");
+                    } catch (Exception e) {
+                        LOGGER.error(e.getLocalizedMessage() + "line number: " + lineNumber + ", line '" + line + "'", e);
+                    }
                     textures.add(texture);
                 } else if (line.startsWith("vn ")) {
-                    Vector3f normal = new Vector3f(Float.parseFloat(currentLine[1]),
-                            Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
+                    Vector3f normal = new Vector3f(0,0,0);
+                    try {
+                        normal = new Vector3f(Float.parseFloat(currentLine[1]),
+                                Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
+                    } catch (NumberFormatException e) {
+                        LOGGER.debug(e.getLocalizedMessage() + "line number: " + lineNumber + ", line '" + line + "'");
+                    } catch (Exception e) {
+                        LOGGER.error(e.getLocalizedMessage() + "line number: " + lineNumber + ", line '" + line + "'", e);
+                    }
                     normals.add(normal);
                 } else if (line.startsWith("f ")) {
                     textureArray = new float[vertices.size() * 2];
@@ -72,7 +96,7 @@ public class OBJLoader {
             reader.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getLocalizedMessage(), e);
         }
 
         verticesArray = new float[vertices.size() * 3];
@@ -97,10 +121,13 @@ public class OBJLoader {
                                       float[] normalsArray) {
         int currentVertexPointer = Integer.parseInt(vertexData[0]) - 1;
         indices.add(currentVertexPointer);
-        Vector2f currentTex = new Vector2f(0,0);
+        Vector2f currentTex = new Vector2f(0, 0);
         try {
             currentTex = textures.get(Integer.parseInt(vertexData[1]) - 1);
         } catch (NumberFormatException ignore) {
+
+        } catch (Exception e) {
+            LOGGER.error(e.getLocalizedMessage(),e);
         }
         textureArray[currentVertexPointer * 2] = currentTex.x;
         textureArray[currentVertexPointer * 2 + 1] = 1 - currentTex.y;
