@@ -53,13 +53,13 @@ public class MainGameLoop {
 //            List<Entity> entities = generateEntities(loader);
 //            Entity controlled = loadPlayer(loader);
             List<Entity> entities = new ArrayList<>();
-            RawModel model = OBJLoader.loadModel("models/arc/owkg2.obj", loader);
+            RawModel model = OBJLoader.loadModel("models/arc/owkg.obj", loader);
             ModelTexture texture = new ModelTexture(loader.loadTexture(ModelTexture.GRAY));
             texture.setHasTransparency(false);
             texture.setReflectivity(50f);
             texture.setShineDamper(50);
             TexturedModel staticModel = new TexturedModel(model, texture);
-            Entity entity = new StaticEntity(staticModel, new Vector3f(100, -7 , 100),0,0,0,0.3f);
+            Entity entity = new StaticEntity(staticModel, new Vector3f(100, -7 , 100),0,0,0,5.3f);
             entities.add(entity);
 
 //            Control entityControl = new RestFlatControl(SERVER_URL, playerId, 1f, playerPosition, playerYapPitchRoll, ticker);
