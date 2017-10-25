@@ -5,9 +5,7 @@ import ru.reeson2003.my3d.client.renderEngine.OBJLoader;
 import ru.reeson2003.my3d.client.textures.ModelTexture;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 
 /**
@@ -16,7 +14,7 @@ import java.util.Properties;
 public class ModelLoaderInternal implements ModelLoader {
     private static ModelLoader instance = null;
 
-    private Map<String, TexturedModel> models;
+    private SortedMap<String, TexturedModel> models;
 
     private ModelLoaderInternal(Loader loader) throws IOException {
         this.models = loadModels(loader);
@@ -29,7 +27,7 @@ public class ModelLoaderInternal implements ModelLoader {
     }
 
     @Override
-    public Map<String, TexturedModel> getModels(Loader loader) throws IOException {
+    public SortedMap<String, TexturedModel> getModels(Loader loader) throws IOException {
         return models;
     }
 
@@ -38,8 +36,8 @@ public class ModelLoaderInternal implements ModelLoader {
         return models.get(id);
     }
 
-    private Map<String,TexturedModel> loadModels(Loader loader) throws IOException {
-        Map<String, TexturedModel> result = new HashMap<>();
+    private SortedMap<String,TexturedModel> loadModels(Loader loader) throws IOException {
+        SortedMap<String, TexturedModel> result = new TreeMap<>();
         Map<String, String[]> descriptor = loadDescriptors();
         for (Map.Entry<String, String[]> entry : descriptor.entrySet()) {
             String[] desc = entry.getValue();
