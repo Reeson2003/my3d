@@ -7,6 +7,8 @@ import ru.reeson2003.my3d.client.control.CameraControl;
 import ru.reeson2003.my3d.client.control.Control;
 import ru.reeson2003.my3d.client.control.FreeKeyboardMouseControl;
 import ru.reeson2003.my3d.client.entities.*;
+import ru.reeson2003.my3d.client.models.ModelLoader;
+import ru.reeson2003.my3d.client.models.ModelLoaderInternal;
 import ru.reeson2003.my3d.client.models.RawModel;
 import ru.reeson2003.my3d.client.models.TexturedModel;
 import ru.reeson2003.my3d.client.renderEngine.DisplayManager;
@@ -30,17 +32,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-//import ru.reeson2003.my3d.transport.rest.RestLoader;
-
 /**
  * Created by Pavel Gavrilov on 12.10.2017.
  */
 public class MainGameLoop {
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 400;
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 800;
     public static final int FPS = 60;
     public static final String TITLE = "AWESOME";
-    public static final float CAMERA_SPEED = 0.5f;
+    public static final float CAMERA_SPEED = 1f;
 
 
     public static void main(String[] args) {
@@ -50,19 +50,22 @@ public class MainGameLoop {
             Loader loader = new Loader();
 
             BaseLoaderFactory.setFactory(new InternalLoaderFactory());
-            List<Entity> entities = null;
+            List<Entity> entities = new ArrayList<>();
             try {
                 entities = generateEntities(loader);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            RawModel model = OBJLoader.loadModel("models/arc/Arc.obj", loader);
-            ModelTexture texture = new ModelTexture(loader.loadTexture(ModelTexture.GRAY));
+            ModelLoader modelLoader = null;
+            try {
+                modelLoader = ModelLoaderInternal.getInstance(loader);
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
 //            texture.setHasTransparency(false);
-            texture.setReflectivity(50f);
-            texture.setShineDamper(50);
-            TexturedModel staticModel = new TexturedModel(model, texture);
-            Entity entity = new StaticEntity(staticModel, new Vector3f(100, 0 , 100),0,0,0,1f);
+            TexturedModel staticModel = modelLoader.getModel("stall");
+            Entity entity = new StaticEntity(staticModel, new Vector3f(100, 0, 100), 0, 0, 0, 3f);
             entities.add(entity);
             TerrainTexturePack texturePack = getTexturePack(loader);
             TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("textures/blendMap.png"));
@@ -70,7 +73,7 @@ public class MainGameLoop {
 
             Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
 
-            Control entityControl = new FreeKeyboardMouseControl(1, new Vector3f(0,10,0), new Vector3f(180,0,0), ticker);
+            Control entityControl = new FreeKeyboardMouseControl(CAMERA_SPEED, new Vector3f(0, 10, 0), new Vector3f(180, 0, 0), ticker);
             CameraControl cameraControl = new CameraControl(entityControl);
             Camera camera = new ControlledCamera(new Vector3f(0, 10, 0), cameraControl);
 
@@ -94,42 +97,44 @@ public class MainGameLoop {
 
     private static List<Entity> generateEntities(Loader loader) throws IOException {
         List<Entity> entities = new ArrayList<>();
-        Map<Long, List<Geometry>> geometries = TerrainObjectGeometries.getInstance();
-        RawModel model = OBJLoader.loadModel("models/lowPolyTree/lowPolyTree.obj", loader);
-        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/lowPolyTree/lowPolyTree.png")));
-        List<Geometry> geometryList = geometries.get(1L);
+        Map<String, List<Geometry>> geometries = TerrainObjectGeometries.getInstance();
+        ModelLoader models = ModelLoaderInternal.getInstance(loader);
+        String id = "terrain.object.tree1";
+        TexturedModel staticModel = models.getModel(id);
+        List<Geometry> geometryList = geometries.get(id);
         for (int i = 0; i < geometryList.size(); i++) {
             Geometry g = geometryList.get(i);
             entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
-        model = OBJLoader.loadModel("models/palm/palm1.obj", loader);
-        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/palm/palm.png")));
-        geometryList = geometries.get(2L);
+        id = "terrain.object.tree2";
+        geometryList = geometries.get(id);
+        staticModel = models.getModel(id);
         for (int i = 0; i < geometryList.size(); i++) {
             Geometry g = geometryList.get(i);
             entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
-        model = OBJLoader.loadModel("models/grass/grassModel.obj", loader);
-        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/grassTexture.png")));
+        id = "terrain.object.grass";
+        geometryList = geometries.get(id);
+        staticModel = models.getModel(id);
         staticModel.getTexture().setHasTransparency(true);
         staticModel.getTexture().setUseFakeLighting(true);
-        geometryList = geometries.get(3L);
         for (int i = 0; i < geometryList.size(); i++) {
             Geometry g = geometryList.get(i);
             entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
-        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/grass/flower.png")));
+        id = "terrain.object.flower";
+        geometryList = geometries.get(id);
+        staticModel = models.getModel(id);
         staticModel.getTexture().setHasTransparency(true);
         staticModel.getTexture().setUseFakeLighting(true);
-        geometryList = geometries.get(4L);
         for (int i = 0; i < geometryList.size(); i++) {
             Geometry g = geometryList.get(i);
             entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
-        model = OBJLoader.loadModel("models/fern/fern.obj", loader);
-        staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/fern/fern.png")));
+        id = "terrain.object.fern";
+        geometryList = geometries.get(id);
+        staticModel = models.getModel(id);
         staticModel.getTexture().setHasTransparency(true);
-        geometryList = geometries.get(5L);
         for (int i = 0; i < geometryList.size(); i++) {
             Geometry g = geometryList.get(i);
             entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
