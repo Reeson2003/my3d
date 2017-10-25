@@ -7,3 +7,7 @@
 /my3dcommon/my3dcommon.iml
 /my3dclient/my3dclient.iml
 /my3dtransport/my3dtransport.iml
+/my3dtransport/my3d-transport.iml
+/my3dserver/my3d-server.iml
+/my3dcommon/my3d-common.iml
+/my3dclient/my3d-client.iml
