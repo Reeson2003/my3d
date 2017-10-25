@@ -150,9 +150,4 @@ public class MainGameLoop {
         return new TerrainTexturePack(background, rTexture, gTexture, bTexture);
     }
 
-    private static TexturedModel loadPlayer(Loader loader) {
-        RawModel model = OBJLoader.loadModel("models/player/person.obj", loader);
-        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/player/playerTexture.png")));
-        return staticModel;
-    }
 }
