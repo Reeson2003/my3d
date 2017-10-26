@@ -41,45 +41,44 @@ public class MainGameLoop {
 
 
     public static void main(String[] args) {
+        Vector3f playerPosition = new Vector3f(100, 0, 100);
+        Vector3f playerYapPitchRoll = new Vector3f(0, 0, 0);
+        float playerScale = 1f;
         try {
             Ticker ticker = new TickerImpl(20);
             DisplayManager.createDisplay(WIDTH, HEIGHT, FPS, TITLE);
             Loader loader = new Loader();
-
-            BaseLoaderFactory.setFactory(new InternalLoaderFactory());
             List<Entity> entities = new ArrayList<>();
-            try {
-                entities = generateEntities(loader);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ModelLoader modelLoader = null;
-            try {
-                modelLoader = ModelLoaderInternal.getInstance(loader);
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(1);
-            }
-//            texture.setHasTransparency(false);
-            TexturedModel staticModel = modelLoader.getModel("stall");
-            Entity entity = new StaticEntity(staticModel, new Vector3f(100, 0, 100), 0, 0, 0, 3f);
+            RawModel model = OBJLoader.loadModel("models/ware/arc_test.obj", loader);
+            TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/ware/arc_test.png")));
+            Entity entity = new StaticEntity(staticModel, new Vector3f(10, 0 , 10),0,0,0,3.3f);
             entities.add(entity);
+            Control entityControl = new FreeKeyboardMouseControl(1, new Vector3f(0,10,0), new Vector3f(180,0,0), ticker);
             TerrainTexturePack texturePack = getTexturePack(loader);
             TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("textures/blendMap.png"));
-            Light light = new Light(new Vector3f(2000, 2000, 2000), new ColourVector(255, 235, 230));
+            Light light = new Light(new Vector3f(-2000, 2000, 100), new Vector3f(0.9f, 0.9f, 0.9f));
 
-            Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
-
-            Control entityControl = new FreeKeyboardMouseControl(CAMERA_SPEED, new Vector3f(0, 10, 0), new Vector3f(180, 0, 0), ticker);
+            Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap, "C:/myasnikov/IDEA_Projeckt/my3d/my3dclient/src/main/resources/textures/blendMap4.png");
             CameraControl cameraControl = new CameraControl(entityControl);
             Camera camera = new ControlledCamera(new Vector3f(0, 10, 0), cameraControl);
 
             MasterRenderer renderer = new MasterRenderer();
+            TexturedModel playerModel = loadPlayer(loader);
+            boolean flag = true;
+            int i = 0;
             while (!Display.isCloseRequested()) {
                 ticker.tick();
                 renderer.processTerrain(terrain);
                 entities.forEach(renderer::processEntity);
                 renderer.render(light, camera);
+                if (light.getColour().getX() < 4.0f && flag) {
+                    light.getColour().setX(light.getColour().getX() + 0.05f);
+                    flag = !(light.getColour().getX() > 3.9f);
+                }
+                else {
+                    light.getColour().setX(light.getColour().getX() - 0.05f);
+                    flag = light.getColour().getX() < 0.9f;
+                }
                 DisplayManager.updateDisplay();
             }
 
@@ -89,6 +88,7 @@ public class MainGameLoop {
         } catch (LWJGLException e) {
             e.printStackTrace();
         } finally {
+//            restLoader.deleteEntity(playerId);
         }
     }
 
