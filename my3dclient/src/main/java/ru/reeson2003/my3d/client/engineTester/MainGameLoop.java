@@ -35,7 +35,7 @@ public class MainGameLoop {
     public static final String TITLE = "AWESOME";
     public static final float CAMERA_SPEED = 0.5f;
 
-    public static final String SERVER_URL = "http://192.168.1.50:8080";
+    public static final String SERVER_URL = "http://localhost:8080";
 
 
     public static void main(String[] args) {
@@ -50,11 +50,12 @@ public class MainGameLoop {
             DisplayManager.createDisplay(WIDTH, HEIGHT, FPS, TITLE);
             Loader loader = new Loader();
 
-            List<Entity> entities = generateEntities(loader);
+            List<Entity> entities = new ArrayList<>();
+//            List<Entity> entities = generateEntities(loader);
 //            Entity controlled = loadPlayer(loader);
             RawModel model = OBJLoader.loadModel("models/arc/arc.obj", loader);
             TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("models/arc/arc.png")));
-            Entity entity = new StaticEntity(staticModel, new Vector3f(10, 0 , 10),0,0,0,0.1f);
+            Entity entity = new StaticEntity(staticModel, new Vector3f(100, 4f , 100),90,0,90,0.05f);
             entities.add(entity);
 
 //            Control entityControl = new RestFlatControl(SERVER_URL, playerId, 1f, playerPosition, playerYapPitchRoll, ticker);

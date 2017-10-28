@@ -32,7 +32,7 @@ public class Controller {
 
     @RequestMapping(value = "/entity", method = RequestMethod.GET)
     Map<Long, Geometry> getEntities() {
-        LOGGER.debug("Requesting entities");
+//        LOGGER.debug("Requesting entities");
         return EntityManagerImpl.getInstance().getEntities();
     }
 
