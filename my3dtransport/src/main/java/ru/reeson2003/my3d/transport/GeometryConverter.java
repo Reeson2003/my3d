@@ -28,16 +28,15 @@ public class GeometryConverter {
         return new Geometry(posX, posY, posZ, rotX, rotY, rotZ, scale);
     }
 
-    public static Map<Long, List<Geometry>> convertGeometries(Map<String, List<Map<String, Double>>> raw) {
-        Map<Long, List<Geometry>> result = new HashMap<>();
+    public static Map<String, List<Geometry>> convertGeometries(Map<String, List<Map<String, Double>>> raw) {
+        Map<String, List<Geometry>> result = new HashMap<>();
         for (Map.Entry<String, List<Map<String, Double>>> entry : raw.entrySet()) {
             List<Map<String, Double>> list = entry.getValue();
             List<Geometry> geometries = new ArrayList<>(list.size());
             for (Map<String, Double> map : list) {
                 geometries.add(convertGeometry(map));
             }
-            Long key = Long.parseLong(entry.getKey());
-            result.put(key, geometries);
+            result.put(entry.getKey(), geometries);
         }
         return result;
     }

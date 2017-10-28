@@ -19,12 +19,12 @@ public class RestLoader {
         this.URL = URL;
     }
 
-    private Map<Long, List<Geometry>> loadObjects(String path) {
+    private Map<String, List<Geometry>> loadObjects(String path) {
         Map<String, List<Map<String, Double>>> result = restTemplate.getForObject(URL + path, Map.class);
         return GeometryConverter.convertGeometries(result);
     }
 
-    public Map<Long, List<Geometry>> loadTerrainObjects() {
+    public Map<String, List<Geometry>> loadTerrainObjects() {
         String path = "terrain";
         return loadObjects(path);
     }
