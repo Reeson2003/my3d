@@ -57,6 +57,7 @@ public class MainGameLoop {
                 entities = generateEntities(loader, terrain);
             } catch (Exception e) {
                 e.printStackTrace();
+                System.exit(1);
             }
             ModelLoader modelLoader = null;
             try {
