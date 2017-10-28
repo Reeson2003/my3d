@@ -16,14 +16,14 @@ import java.util.Map;
  */
 public class InternalGeometryLoader implements GeometryLoader {
     @Override
-    public Map<Long, List<Geometry>> load() throws Exception {
+    public Map<String, List<Geometry>> load() throws Exception {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("terrainObjects.geometry");
         if (is == null)
             throw new Exception("Can not open stream for resource 'terrainObjects.geometry'");
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader reader = new BufferedReader(isr);
         String line;
-        Map<Long, List<Geometry>> result = new HashMap<>();
+        Map<String, List<Geometry>> result = new HashMap<>();
         while (true) {
             line = reader.readLine();
             if (line == null)
@@ -31,7 +31,7 @@ public class InternalGeometryLoader implements GeometryLoader {
             String[] values = line.split(",");
             if (values.length != 8)
                 throw new Exception("Invalid 'terrainObjects.geometry' file content");
-            Long id;
+            String  id;
             Float posX;
             Float posY;
             Float posZ;
@@ -40,7 +40,7 @@ public class InternalGeometryLoader implements GeometryLoader {
             Float rotZ;
             Float scale;
             try {
-                id = Long.parseLong(values[0]);
+                id = values[0];
                 posX = Float.parseFloat(values[1]);
                 posY = Float.parseFloat(values[2]);
                 posZ = Float.parseFloat(values[3]);

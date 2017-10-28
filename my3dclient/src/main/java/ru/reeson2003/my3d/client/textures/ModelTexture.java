@@ -4,6 +4,7 @@ package ru.reeson2003.my3d.client.textures;
  * Created by Pavel Gavrilov on 12.10.2017.
  */
 public class ModelTexture {
+    public static String GRAY = "textures/gray.png";
     private int id;
     private float shineDamper = 1;
     private float reflectivity = 0;

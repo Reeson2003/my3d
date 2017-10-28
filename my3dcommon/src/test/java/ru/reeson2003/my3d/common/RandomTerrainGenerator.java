@@ -27,8 +27,8 @@ public class RandomTerrainGenerator {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(new File(path));
-            Map<Long, List<Geometry>> geoms = getGeometries();
-            for (Map.Entry<Long, List<Geometry>> entry : geoms.entrySet()) {
+            Map<String, List<Geometry>> geoms = getGeometries();
+            for (Map.Entry<String, List<Geometry>> entry : geoms.entrySet()) {
                 List<Geometry> geometries = entry.getValue();
                 for (Geometry g : geometries) {
                     writer.write(formatGeometry(entry.getKey(), g) + "\n");
@@ -40,22 +40,22 @@ public class RandomTerrainGenerator {
         }
     }
 
-    private Map<Long, List<Geometry>> getGeometries() throws IOException {
+    private Map<String , List<Geometry>> getGeometries() throws IOException {
         Random random = new Random();
-        Map<Long, List<Geometry>> result = new HashMap<>();
+        Map<String, List<Geometry>> result = new HashMap<>();
         TerrainObjects objects = TerrainObjects.getInstance();
-        for (Long aLong : objects.values()) {
+        for (String s : objects) {
             List<Geometry> geometries = new ArrayList<>();
             for (int i = 0; i <  ITEM_AMOUNT_CAP; i++) {
                 Geometry geometry =new Geometry(25 + random.nextFloat() * 800, 0, 25 + random.nextFloat() * 800, 0,0,0, 1);
                 geometries.add(geometry);
             }
-            result.put(aLong, geometries);
+            result.put(s, geometries);
         }
         return result;
     }
 
-    private String formatGeometry(long id, Geometry geometry) {
+    private String formatGeometry(String id, Geometry geometry) {
         return new StringBuilder().append(id)
                 .append(",")
                 .append(geometry.getPosX())

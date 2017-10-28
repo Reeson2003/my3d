@@ -11,9 +11,9 @@ import java.util.function.Function;
 /**
  * Created by Pavel Gavrilov on 20.10.2017.
  */
-public class TerrainObjectGeometries implements Map<Long, List<Geometry>> {
+public class TerrainObjectGeometries implements Map<String, List<Geometry>> {
     private static TerrainObjectGeometries instance;
-    private static Map<Long, List<Geometry>> geometryHashMap;
+    private static Map<String, List<Geometry>> geometryHashMap;
     private static Exception exception;
 
     static {
@@ -40,12 +40,12 @@ public class TerrainObjectGeometries implements Map<Long, List<Geometry>> {
     }
 
     @Override
-    public void replaceAll(BiFunction<? super Long, ? super List<Geometry>, ? extends List<Geometry>> biFunction) {
+    public void replaceAll(BiFunction<? super String, ? super List<Geometry>, ? extends List<Geometry>> biFunction) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Geometry> putIfAbsent(Long aLong, List<Geometry> geometry) {
+    public List<Geometry> putIfAbsent(String aString, List<Geometry> geometry) {
         throw new UnsupportedOperationException();
     }
 
@@ -55,37 +55,37 @@ public class TerrainObjectGeometries implements Map<Long, List<Geometry>> {
     }
 
     @Override
-    public boolean replace(Long aLong, List<Geometry> geometry, List<Geometry> v1) {
+    public boolean replace(String aString, List<Geometry> geometry, List<Geometry> v1) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Geometry> replace(Long aLong, List<Geometry> geometry) {
+    public List<Geometry> replace(String aString, List<Geometry> geometry) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Geometry> computeIfAbsent(Long aLong, Function<? super Long, ? extends List<Geometry>> function) {
+    public List<Geometry> computeIfAbsent(String aString, Function<? super String, ? extends List<Geometry>> function) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Geometry> computeIfPresent(Long aLong, BiFunction<? super Long, ? super List<Geometry>, ? extends List<Geometry>> biFunction) {
+    public List<Geometry> computeIfPresent(String aString, BiFunction<? super String, ? super List<Geometry>, ? extends List<Geometry>> biFunction) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Geometry> compute(Long aLong, BiFunction<? super Long, ? super List<Geometry>, ? extends List<Geometry>> biFunction) {
+    public List<Geometry> compute(String aString, BiFunction<? super String, ? super List<Geometry>, ? extends List<Geometry>> biFunction) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Geometry> merge(Long aLong, List<Geometry> geometry, BiFunction<? super List<Geometry>, ? super List<Geometry>, ? extends List<Geometry>> biFunction) {
+    public List<Geometry> merge(String aString, List<Geometry> geometry, BiFunction<? super List<Geometry>, ? super List<Geometry>, ? extends List<Geometry>> biFunction) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Geometry> put(Long aLong, List<Geometry> geometry) {
+    public List<Geometry> put(String aString, List<Geometry> geometry) {
         throw new UnsupportedOperationException();
     }
 
@@ -95,7 +95,7 @@ public class TerrainObjectGeometries implements Map<Long, List<Geometry>> {
     }
 
     @Override
-    public void putAll(Map<? extends Long, ? extends List<Geometry>> map) {
+    public void putAll(Map<? extends String, ? extends List<Geometry>> map) {
         throw new UnsupportedOperationException();
     }
 
@@ -130,7 +130,7 @@ public class TerrainObjectGeometries implements Map<Long, List<Geometry>> {
     }
 
     @Override
-    public Set<Long> keySet() {
+    public Set<String> keySet() {
         return geometryHashMap.keySet();
     }
 
@@ -140,7 +140,7 @@ public class TerrainObjectGeometries implements Map<Long, List<Geometry>> {
     }
 
     @Override
-    public Set<Entry<Long, List<Geometry>>> entrySet() {
+    public Set<Entry<String, List<Geometry>>> entrySet() {
         return geometryHashMap.entrySet();
     }
 
@@ -150,7 +150,7 @@ public class TerrainObjectGeometries implements Map<Long, List<Geometry>> {
     }
 
     @Override
-    public void forEach(BiConsumer<? super Long, ? super List<Geometry>> biConsumer) {
+    public void forEach(BiConsumer<? super String, ? super List<Geometry>> biConsumer) {
         geometryHashMap.forEach(biConsumer);
     }
 

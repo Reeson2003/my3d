@@ -1,7 +1,7 @@
 package ru.reeson2003.my3d.client.control;
 
 import org.lwjgl.util.vector.Vector3f;
-import ru.reeson2003.my3d.client.rest.RestLoader;
+import ru.reeson2003.my3d.transport.rest.RestLoader;
 import ru.reeson2003.my3d.client.ticker.Ticker;
 import ru.reeson2003.my3d.common.Geometry;
 
