@@ -48,9 +48,14 @@ public class MainGameLoop {
 
             BaseLoaderFactory.setFactory(new InternalLoaderFactory());
             List<Entity> entities = new ArrayList<>();
+
+            TerrainTexturePack texturePack = getTexturePack(loader);
+            TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("textures/blendMap.png"));
+            Terrain terrain = null;
             try {
-                entities = generateEntities(loader);
-            } catch (IOException e) {
+                terrain = new Terrain(0, 0, loader, texturePack, blendMap, "textures/blendMap4.png");
+                entities = generateEntities(loader, terrain);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             ModelLoader modelLoader = null;
@@ -60,15 +65,10 @@ public class MainGameLoop {
                 e.printStackTrace();
                 System.exit(1);
             }
-//            texture.setHasTransparency(false);
             TexturedModel staticModel = modelLoader.getModel("stall");
             Entity entity = new StaticEntity(staticModel, new Vector3f(100, 0, 100), 0, 0, 0, 3f);
             entities.add(entity);
-            TerrainTexturePack texturePack = getTexturePack(loader);
-            TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("textures/blendMap.png"));
             Light light = new Light(new Vector3f(2000, 2000, 2000), new ColourVector(255, 235, 230));
-
-            Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
 
             Control entityControl = new FreeKeyboardMouseControl(CAMERA_SPEED, new Vector3f(0, 10, 0), new Vector3f(180, 0, 0), ticker);
             CameraControl cameraControl = new CameraControl(entityControl);
@@ -92,7 +92,7 @@ public class MainGameLoop {
         }
     }
 
-    private static List<Entity> generateEntities(Loader loader) throws IOException {
+    private static List<Entity> generateEntities(Loader loader, Terrain terrain) throws IOException {
         List<Entity> entities = new ArrayList<>();
         Map<String, List<Geometry>> geometries = TerrainObjectGeometries.getInstance();
         ModelLoader models = ModelLoaderInternal.getInstance(loader);
@@ -101,14 +101,14 @@ public class MainGameLoop {
         List<Geometry> geometryList = geometries.get(id);
         for (int i = 0; i < geometryList.size(); i++) {
             Geometry g = geometryList.get(i);
-            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
+            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), terrain.getHeight(g.getPosX(), g.getPosZ()), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
         id = "terrain.object.tree2";
         geometryList = geometries.get(id);
         staticModel = models.getModel(id);
         for (int i = 0; i < geometryList.size(); i++) {
             Geometry g = geometryList.get(i);
-            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
+            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), terrain.getHeight(g.getPosX(), g.getPosZ()), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
         id = "terrain.object.grass";
         geometryList = geometries.get(id);
@@ -117,7 +117,7 @@ public class MainGameLoop {
         staticModel.getTexture().setUseFakeLighting(true);
         for (int i = 0; i < geometryList.size(); i++) {
             Geometry g = geometryList.get(i);
-            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
+            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), terrain.getHeight(g.getPosX(), g.getPosZ()), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
         id = "terrain.object.flower";
         geometryList = geometries.get(id);
@@ -126,7 +126,7 @@ public class MainGameLoop {
         staticModel.getTexture().setUseFakeLighting(true);
         for (int i = 0; i < geometryList.size(); i++) {
             Geometry g = geometryList.get(i);
-            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
+            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), terrain.getHeight(g.getPosX(), g.getPosZ()), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
         id = "terrain.object.fern";
         geometryList = geometries.get(id);
@@ -134,7 +134,7 @@ public class MainGameLoop {
         staticModel.getTexture().setHasTransparency(true);
         for (int i = 0; i < geometryList.size(); i++) {
             Geometry g = geometryList.get(i);
-            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), g.getPosY(), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
+            entities.add(new StaticEntity(staticModel, new Vector3f(g.getPosX(), terrain.getHeight(g.getPosX(), g.getPosZ()), g.getPosZ()), g.getRotX(), g.getRotY(), g.getRotZ(), g.getScale()));
         }
         return entities;
     }

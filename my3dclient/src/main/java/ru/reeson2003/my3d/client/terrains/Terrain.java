@@ -5,39 +5,39 @@ import ru.reeson2003.my3d.client.renderEngine.Loader;
 import ru.reeson2003.my3d.client.textures.TerrainTexture;
 import ru.reeson2003.my3d.client.textures.TerrainTexturePack;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+
 public class Terrain {
     private static final float SIZE = 800;
     private static final float MAX_HEIGHT = 40;
-    private static final float MAX_PIXEL_COLOUR = 256*256*256;
+    private static final float MAX_PIXEL_COLOUR = 256 * 256 * 256;
 
     private float x;
     private float z;
     private RawModel model;
     private TerrainTexturePack texturePack;
     private TerrainTexture blendMap;
+    private float[][] heightMap;
 
     public Terrain(int gridX, int gridZ,
                    Loader loader,
                    TerrainTexturePack texturePack,
                    TerrainTexture blendMap,
-                   String heightMap) {
+                   String heightMapUrl) throws TerrainLoadException {
         this.texturePack = texturePack;
         this.blendMap = blendMap;
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
-        this.model = generateTerrain(loader, heightMap);
+        this.heightMap = getHeightMap(heightMapUrl);
+        this.model = generateTerrain(loader);
     }
 
-    private RawModel generateTerrain(Loader loader, String heightMap) {
-        BufferedImage image = null;
-        System.out.println(heightMap);
-        try {
-            image = ImageIO.read(new File(heightMap));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        assert image != null;
-        int VERTEX_COUNT = image.getHeight();
+
+    private RawModel generateTerrain(Loader loader) {
+        int VERTEX_COUNT = heightMap.length;
         int count = VERTEX_COUNT * VERTEX_COUNT;
         float[] vertices = new float[count * 3];
         float[] normals = new float[count * 3];
@@ -47,7 +47,7 @@ public class Terrain {
         for (int i = 0; i < VERTEX_COUNT; i++) {
             for (int j = 0; j < VERTEX_COUNT; j++) {
                 vertices[vertexPointer * 3] = (float) j / ((float) VERTEX_COUNT - 1) * SIZE;
-                vertices[vertexPointer * 3 + 1] = getHeight(j, i, image);
+                vertices[vertexPointer * 3 + 1] = getHeight(j, i);
                 vertices[vertexPointer * 3 + 2] = (float) i / ((float) VERTEX_COUNT - 1) * SIZE;
                 normals[vertexPointer * 3] = 0;
                 normals[vertexPointer * 3 + 1] = 1;
@@ -74,8 +74,25 @@ public class Terrain {
         }
         return loader.loadToVAO(vertices, textureCoords, normals, indices);
     }
+
+    private float[][] getHeightMap(String filePath) throws TerrainLoadException {
+        try {
+            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
+            BufferedImage image = ImageIO.read(is);
+            float[][] result = new float[image.getHeight()][image.getWidth()];
+            for (int i = 0; i < image.getHeight(); i++) {
+                for (int j = 0; j < image.getWidth(); j++) {
+                    result[i][j] = getHeight(i, j, image);
+                }
+            }
+            return result;
+        } catch (Exception e) {
+            throw new TerrainLoadException(e);
+        }
+    }
+
     private float getHeight(int x, int z, BufferedImage image) {
-        if (x < 0 || x >= image.getHeight() || z < 0 || z >= image.getHeight()) {
+        if (image == null || x < 0 || x >= image.getHeight() || z < 0 || z >= image.getHeight()) {
             return 0;
         }
         float height = image.getRGB(x, z);
@@ -84,6 +101,11 @@ public class Terrain {
         height *= MAX_HEIGHT;
         return height;
     }
+
+    public float getHeight(float x, float z) {
+        return heightMap[(int) x][(int) z];
+    }
+
     public float getX() {
         return x;
     }
