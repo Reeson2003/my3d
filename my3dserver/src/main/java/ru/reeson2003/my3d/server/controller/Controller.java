@@ -19,7 +19,7 @@ public class Controller {
     private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
 
     @RequestMapping(value = "/terrain",method = RequestMethod.GET)
-    Map<Long, List<Geometry>> getTerrainObjects() {
+    Map<String, List<Geometry>> getTerrainObjects() {
         TerrainObjectGeometries objects = null;
         LOGGER.debug("Requesting terrain objects");
         try {
